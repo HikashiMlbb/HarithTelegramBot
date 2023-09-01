@@ -1,6 +1,7 @@
 ﻿namespace TelegramBot.Domain.POCOs;
 
-public class BotConfiguration
+public class BotOptions
 {
-    public string? Token { get; init; }
+    public const string Position = "BotSettings";
+    public string? Token { get; set; }
 }
