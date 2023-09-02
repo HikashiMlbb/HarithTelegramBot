@@ -1,4 +1,4 @@
-﻿namespace TelegramBot.Domain.Interfaces;
+﻿namespace TelegramBot.Application.Services.Interfaces;
 
 public interface IStoppingToken
 {

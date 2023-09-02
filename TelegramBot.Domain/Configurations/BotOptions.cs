@@ -1,4 +1,4 @@
-﻿namespace TelegramBot.Domain.POCOs;
+﻿namespace TelegramBot.Domain.Configurations;
 
 public class BotOptions
 {

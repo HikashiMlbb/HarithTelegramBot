@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-namespace TelegramBot.Domain.POCOs;
+namespace TelegramBot.Domain.Configurations;
 
 public static class Configuration
 {
-    public static IServiceCollection AddTOptions(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration config)
     {
         var section = config.GetSection(BotOptions.Position);
         var botOptions = section.Get<BotOptions>();

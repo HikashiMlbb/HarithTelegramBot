@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
-using TelegramBot.Domain.Interfaces;
-using TelegramBot.Domain.POCOs;
+using TelegramBot.Application.Services.Interfaces;
+using TelegramBot.Domain.Configurations;
 
 namespace TelegramBot.Application.Services;
 

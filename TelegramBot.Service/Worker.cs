@@ -2,7 +2,7 @@ using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Services;
-using TelegramBot.Domain.Interfaces;
+using TelegramBot.Application.Services.Interfaces;
 
 namespace TelegramBot.Service;
 
@@ -28,7 +28,7 @@ public class Worker : BackgroundService
 
         ReceiverOptions receiverOptions = new ReceiverOptions
         {
-            AllowedUpdates = new[] { UpdateType.Message },
+            AllowedUpdates = new[] { UpdateType.Message, UpdateType.ChatMember, UpdateType.Poll, UpdateType.CallbackQuery },
             Limit = 10,
             ThrowPendingUpdates = true
         };
