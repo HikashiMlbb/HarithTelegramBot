@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using TelegramBot.Application.Services.Interfaces;
-using TelegramBot.Domain.Configurations;
+using TelegramBot.Infrastructure.BotSettings;
 
 namespace TelegramBot.Application.Services;
 
@@ -22,37 +22,32 @@ public class Bot : IBot
         _config = config;
     }
 
-    public ITelegramBotClient CurrentBot
+    public ITelegramBotClient CurrentBot => GetBot();
+
+    private ITelegramBotClient GetBot()
     {
-        get
+        if (_bot != null)
         {
-            if (_bot != null)
-            {
-                return _bot;
-            }
-
-            string? token = _botBotOptions.Token;
-
-            if (token == null)
-            {
-                _logger.LogCritical("Bot Configuration: Token is null.");
-                throw new NullReferenceException("Bot Configuration: Token is null.");
-            }
-
-            string? proxyUri = _config["ProxyUri"];
-            HttpClientHandler httpClientHandler = new HttpClientHandler();
-            
-            if (proxyUri != null)
-            {
-                httpClientHandler.Proxy = new WebProxy(proxyUri);
-                httpClientHandler.UseProxy = true;
-            }
-            else
-            {
-                _logger.LogWarning("WARNING! You're not using Proxy because appsettings.json doesn't have \"ProxyUri\" key.");
-            }
-            _bot = new TelegramBotClient(token, new HttpClient(httpClientHandler));
             return _bot;
         }
+
+        HttpClientHandler httpClientHandler = new HttpClientHandler();
+
+        string token = _botBotOptions.Token;
+        string? proxyUri = _botBotOptions.ProxyUri;
+
+        if (proxyUri != null)
+        {
+            httpClientHandler.Proxy = new WebProxy(proxyUri);
+            httpClientHandler.UseProxy = true;
+        }
+        else
+        {
+            _logger.LogWarning(
+                "WARNING! You're not using Proxy because appsettings.json doesn't have \"ProxyUri\" key in \"BotSettings\" section.");
+        }
+
+        _bot = new TelegramBotClient(token, new HttpClient(httpClientHandler));
+        return _bot;
     }
 }
