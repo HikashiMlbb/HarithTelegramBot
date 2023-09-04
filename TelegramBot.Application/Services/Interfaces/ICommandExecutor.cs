@@ -7,5 +7,5 @@ namespace TelegramBot.Application.Services.Interfaces;
 public interface ICommandExecutor
 {
     public Task<ICommonCommand?> FindCommandAsync(string commandName);
-    public Task ExecuteCommandAsync(ICommonCommand command, ITelegramBotClient bot, Message message, CancellationToken cancellationToken);
+    public Task ExecuteCommandAsync(ICommonCommand command, Message message, CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 using Telegram.Bot.Polling;
+using TelegramBot.Application;
 using TelegramBot.Application.Services;
 using TelegramBot.Application.Services.Interfaces;
 using TelegramBot.Service;
@@ -10,11 +11,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddHostedService<Worker>();
         
         services.AddInfrastructure(hostCtx.Configuration);
-
-        services.AddSingleton<IBot, Bot>();
-        services.AddSingleton<IUpdateHandler, UpdateHandler>();
-        services.AddSingleton<IStoppingToken, StoppingToken>();
-        services.AddSingleton<ICommandExecutor, CommandExecutor>();
+        
+        services.AddApplication();
     })
     .Build();
 

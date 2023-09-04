@@ -35,7 +35,7 @@ public class UpdateHandler : IUpdateHandler
                     ICommonCommand? command = await _commandExecutor.FindCommandAsync(textCommand);
                     if (command is not null)
                     {
-                        await _commandExecutor.ExecuteCommandAsync(command, botClient, message, cancellationToken);
+                        await _commandExecutor.ExecuteCommandAsync(command, message, cancellationToken);
                     }
                     break;
                 }

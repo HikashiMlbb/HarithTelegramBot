@@ -10,10 +10,12 @@ namespace TelegramBot.Application.Services;
 public class CommandExecutor : ICommandExecutor
 {
     private readonly ILogger<CommandExecutor> _logger;
+    private readonly IEnumerable<ICommonCommand> _commands;
     
-    public CommandExecutor(ILogger<CommandExecutor> logger)
+    public CommandExecutor(ILogger<CommandExecutor> logger, IEnumerable<ICommonCommand> commands)
     {
         _logger = logger;
+        _commands = commands;
     }
 
     private ICommonCommand? FindCommand(string commandName)
@@ -45,14 +47,34 @@ public class CommandExecutor : ICommandExecutor
 
         return null;
     }
+
+    private ICommonCommand? FindCommandNew(string commandName)
+    {
+        foreach (ICommonCommand command in _commands)
+        {
+            if (command.GetType().GetCustomAttribute<CommandAttribute>() is not { } attr)
+            {
+                continue;
+            }
+
+            if (attr.Name != commandName)
+            {
+                continue;
+            }
+
+            return command;
+        }
+
+        return null;
+    }
     
     public async Task<ICommonCommand?> FindCommandAsync(string commandName)
     {
-        return await Task.Run(() => FindCommand(commandName));
+        return await Task.Run(() => FindCommandNew(commandName));
     }
 
-    public async Task ExecuteCommandAsync(ICommonCommand command, ITelegramBotClient bot, Message message, CancellationToken cancellationToken)
+    public async Task ExecuteCommandAsync(ICommonCommand command, Message message, CancellationToken cancellationToken)
     {
-        await command.ExecuteAsync(bot, message, cancellationToken);
+        await command.ExecuteAsync(message, cancellationToken);
     }
 }

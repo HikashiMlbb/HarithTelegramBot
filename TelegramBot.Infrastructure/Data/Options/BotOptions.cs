@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TelegramBot.Infrastructure.BotSettings;
+namespace TelegramBot.Infrastructure.Data.Options;
 
 public sealed class BotOptions
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TelegramBot.Domain.Entities;
 
-namespace TelegramBot.Infrastructure;
+namespace TelegramBot.Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext
 {
@@ -8,4 +9,6 @@ public class ApplicationDbContext : DbContext
     {
         
     }
+
+    public DbSet<BotMember> Members { get; set; } = null!;
 }

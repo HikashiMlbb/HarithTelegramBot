@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TelegramBot.Domain.Exceptions.Database;
-using Microsoft.Extensions.Options;
-using TelegramBot.Infrastructure.BotSettings;
+using TelegramBot.Domain.Interfaces;
+using TelegramBot.Infrastructure.Data;
+using TelegramBot.Infrastructure.Data.Options;
+using TelegramBot.Infrastructure.Repositories;
 
 namespace TelegramBot.Infrastructure;
 
@@ -22,9 +24,10 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlite(connectionString);
-        });
+        }, ServiceLifetime.Singleton);
         
         AddCustomOptions(services);
+        AddRepositories(services);
         
         return services;
     }
@@ -35,5 +38,10 @@ public static class DependencyInjection
             .BindConfiguration(BotOptions.PathToSection)
             .ValidateDataAnnotations()
             .ValidateOnStart();
+    }
+
+    private static void AddRepositories(IServiceCollection services)
+    {
+        services.AddSingleton<IBotMembersRepository, BotMembersRepository>();
     }
 }
