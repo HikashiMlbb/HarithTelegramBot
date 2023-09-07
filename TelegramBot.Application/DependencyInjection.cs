@@ -11,15 +11,26 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        // Registering common commands
-        services.AddSingleton<ICommonCommand, AddMemberCommand>();
-        services.AddSingleton<ICommonCommand, ReadMemberCommand>();
+        AddCommonCommands(services);
         
         // Adding services
         services.AddSingleton<IBot, Bot>();
         services.AddSingleton<IUpdateHandler, UpdateHandler>();
         services.AddSingleton<IStoppingToken, StoppingToken>();
         services.AddSingleton<ICommandExecutor, CommandExecutor>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCommonCommands(IServiceCollection services)
+    {
+        Type[] types = typeof(DependencyInjection).Assembly.GetTypes();
+        Type typeofInterface = typeof(ICommonCommand);
+
+        foreach (Type type in types.Where(t => t is { IsClass: true, IsPublic: true } && t.IsAssignableTo(typeofInterface)))
+        {
+            services.AddSingleton(typeofInterface, type);
+        }
 
         return services;
     }
