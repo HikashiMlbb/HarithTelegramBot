@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using TelegramBot.Domain.Primitives;
+﻿using TelegramBot.Domain.Primitives;
 
 namespace TelegramBot.Domain.ValueObjects;
 

@@ -13,14 +13,12 @@ namespace TelegramBot.Application.Commands.Common.Basic;
 [Command("start")]
 public class StartCommand : ICommonCommand
 {
-    private readonly ApplicationDbContext _db;
-    private readonly IBotMembersRepository _membersRepository;
+    private readonly IUnitOfWork _uow;
     private readonly ITelegramBotClient _bot;
     
-    public StartCommand(ApplicationDbContext db, IBotMembersRepository membersRepository, IBot bot)
+    public StartCommand(IUnitOfWork db, IBot bot)
     {
-        _db = db;
-        _membersRepository = membersRepository;
+        _uow = db;
         _bot = bot.CurrentBot;
     }
     public async Task ExecuteAsync(Message message, CancellationToken cancellationToken)
@@ -34,13 +32,13 @@ public class StartCommand : ICommonCommand
 
         try
         {
-            await _membersRepository.AddAsync(member, cancellationToken);
-            await _db.SaveChangesAsync(cancellationToken);
+            await _uow.Members.AddAsync(member, cancellationToken);
+            await _uow.CompleteAsync(cancellationToken);
             await _bot.SendTextMessageAsync(chatId, "You've registered!", cancellationToken: cancellationToken);
         }
-        catch (MemberAlreadyExistsException e)
+        catch (MemberAlreadyExistsException )
         {
-            BotMember foundMember = (await _membersRepository.FindUserByAccountAsync(account, cancellationToken))!;
+            BotMember foundMember = (await _uow.Members.FindUserByAccountAsync(account, cancellationToken))!;
             string messageToSend = $"""
                              You're already registered!
                              Your level: {foundMember.Level}

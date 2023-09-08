@@ -1,10 +1,13 @@
-﻿using TelegramBot.Domain.Primitives;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using TelegramBot.Domain.Primitives;
 using TelegramBot.Domain.ValueObjects;
 
 namespace TelegramBot.Domain.Entities;
 
 public sealed class BotMember : Entity
 {
+    [DisplayName("Name")]
     public string FirstName { get; set; }
     public Account Account { get; set; }
     public int Level { get; set; }

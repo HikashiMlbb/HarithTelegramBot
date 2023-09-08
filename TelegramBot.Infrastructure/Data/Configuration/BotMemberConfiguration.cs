@@ -15,10 +15,17 @@ public class BotMemberConfiguration : IEntityTypeConfiguration<BotMember>
     {
         builder
             .HasKey("Id");
-        builder
-            .Property(member => member.Account)
-            .HasConversion(
-                account => JsonConvert.SerializeObject(account),
-                account => JsonConvert.DeserializeObject<Account>(account));
+
+        builder.OwnsOne(m => m.Account, a =>
+        {
+            a.WithOwner();
+            
+            a.Property(account => account.TelegramId)
+                .HasColumnName("TelegramId")
+                .IsRequired();
+            a.Property(account => account.ChatId)
+                .HasColumnName("ChatId")
+                .IsRequired();
+        });
     }
 }

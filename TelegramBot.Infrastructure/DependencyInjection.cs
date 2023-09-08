@@ -25,6 +25,8 @@ public static class DependencyInjection
         {
             options.UseSqlite(connectionString);
         }, ServiceLifetime.Singleton);
+
+        services.AddSingleton<IUnitOfWork, UnitOfWork>();
         
         AddCustomOptions(services);
         AddRepositories(services);

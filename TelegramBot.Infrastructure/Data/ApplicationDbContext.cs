@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TelegramBot.Domain.Entities;
+using TelegramBot.Domain.Interfaces;
 
 namespace TelegramBot.Infrastructure.Data;
 
