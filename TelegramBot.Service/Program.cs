@@ -9,9 +9,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostCtx, services) =>
     {
         using Logger logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .WriteTo.File(@"D:\Roman\Database\harith_chatbot\logs.txt")
+            .ReadFrom.Configuration(hostCtx.Configuration)
             .CreateLogger();
 
         Log.Logger = logger;
@@ -27,3 +25,4 @@ IHost host = Host.CreateDefaultBuilder(args)
     .Build();
 
 host.Run();
+Log.CloseAndFlush();

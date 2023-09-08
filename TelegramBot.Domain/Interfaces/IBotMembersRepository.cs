@@ -1,4 +1,5 @@
 ﻿using TelegramBot.Domain.Entities;
+using TelegramBot.Domain.ValueObjects;
 
 namespace TelegramBot.Domain.Interfaces;
 
@@ -16,11 +17,10 @@ public interface IBotMembersRepository
     /// <summary>
     ///     Accepts the user's telegram id and his chat id. It returns the BotMember instance or null if not found
     /// </summary>
-    /// <param name="telegramId">An user's telegram id</param>
-    /// <param name="chatId">A chat id in which it should find the user</param>
+    /// <param name="account"></param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Returns BotMember which found by it's telegram and chat ids</returns>
-    public Task<BotMember?> FindUserByTelegramAndChatIdAsync(long telegramId, long chatId, CancellationToken cancellationToken = default);
+    public Task<BotMember?> FindUserByAccountAsync(Account account, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get a list of BotMember instances which has specified chat id. Can be empty.

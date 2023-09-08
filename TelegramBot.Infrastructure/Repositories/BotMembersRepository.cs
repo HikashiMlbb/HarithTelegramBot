@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.Exceptions.Members;
 using TelegramBot.Domain.Interfaces;
+using TelegramBot.Domain.ValueObjects;
 using TelegramBot.Infrastructure.Data;
 
 namespace TelegramBot.Infrastructure.Repositories;
@@ -33,14 +34,14 @@ public class BotMembersRepository : IBotMembersRepository
 
     }
 
-    public async Task<BotMember?> FindUserByTelegramAndChatIdAsync(long telegramId, long chatId, CancellationToken cancellationToken = default)
+    public async Task<BotMember?> FindUserByAccountAsync(Account account, CancellationToken cancellationToken = default)
     {
-        return await _db.Members.SingleOrDefaultAsync(member => member.TelegramId == telegramId && member.ChatId == chatId, cancellationToken);
+        return await _db.Members.SingleOrDefaultAsync(member => member.Account == account, cancellationToken);
     }
 
     public async Task<IEnumerable<BotMember>> FindUsersByChatIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        return await Task.Run(() => _db.Members.Where(member => member.ChatId == id), cancellationToken);
+        return await Task.Run(() => _db.Members.Where(member => member.Account.ChatId == id), cancellationToken);
     }
 
     public async Task<IEnumerable<BotMember>> FilterByAsync(Predicate<BotMember> predicate, CancellationToken cancellationToken = default)
@@ -57,7 +58,7 @@ public class BotMembersRepository : IBotMembersRepository
         }
 
         BotMember target = await _db.Members.SingleAsync(
-            dbMember => dbMember.TelegramId == member.TelegramId && dbMember.ChatId == member.ChatId,
+            dbMember => dbMember.Account == member.Account,
             cancellationToken);
 
         target.Experience += reward;
@@ -66,6 +67,6 @@ public class BotMembersRepository : IBotMembersRepository
 
     private async Task<bool> IsMemberExistInDatabaseAsync(BotMember targetMember, CancellationToken cancellationToken = default)
     {
-        return await _db.Members.AnyAsync(dbMember => dbMember.TelegramId == targetMember.TelegramId && dbMember.ChatId == targetMember.ChatId, cancellationToken);
+        return await _db.Members.AnyAsync(dbMember => dbMember.Account == targetMember.Account, cancellationToken);
     }
 }

@@ -1,20 +1,27 @@
 ﻿using TelegramBot.Domain.Primitives;
+using TelegramBot.Domain.ValueObjects;
 
 namespace TelegramBot.Domain.Entities;
 
 public sealed class BotMember : Entity
 {
     public string FirstName { get; set; }
-    public long TelegramId { get; set; }
-    public long ChatId { get; set; }
+    public Account Account { get; set; }
     public int Level { get; set; }
     public float Experience { get; set; }
+
+    public BotMember() : base(Guid.NewGuid())
+    {
+        FirstName = String.Empty;
+        Account = new Account();
+        Level = 0;
+        Experience = 0;
+    }
     
-    public BotMember(Guid id, string firstName, long telegramId, long chatId) : base(id)
+    public BotMember(string firstName, Account account) : base(Guid.NewGuid())
     {
         FirstName = firstName;
-        TelegramId = telegramId;
-        ChatId = chatId;
+        Account = account;
         Level = 0;
         Experience = 0f;
     }

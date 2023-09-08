@@ -55,7 +55,7 @@ public class UpdateHandler : IUpdateHandler
     {
         await Task.Factory.StartNew(() =>
         {
-            _logger.Error("Polling exception: {error}", exception.Message);
+            _logger.Error("Polling exception: {error}", exception);
             throw new Exception("Polling exception");
         }, cancellationToken);
     }

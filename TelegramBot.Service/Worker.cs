@@ -29,7 +29,7 @@ public class Worker : BackgroundService
         ReceiverOptions receiverOptions = new ReceiverOptions
         {
             AllowedUpdates = new[] { UpdateType.Message, UpdateType.ChatMember, UpdateType.Poll, UpdateType.CallbackQuery },
-            Limit = 10,
+            Limit = 1,
             ThrowPendingUpdates = true
         };
 

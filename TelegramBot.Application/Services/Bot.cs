@@ -34,19 +34,17 @@ public class Bot : IBot
         HttpClientHandler httpClientHandler = new HttpClientHandler();
 
         string token = _botBotOptions.Token;
-        string? proxyUri = _botBotOptions.ProxyUri;
+        string? proxy = _botBotOptions.Proxy;
 
-        if (proxyUri != null)
-        {
-            httpClientHandler.Proxy = new WebProxy(proxyUri);
-            httpClientHandler.UseProxy = true;
-        }
-        else
+        if (proxy is null)
         {
             _logger.LogWarning(
-                "WARNING! You're not using Proxy because appsettings.json doesn't have \"ProxyUri\" key in \"BotSettings\" section.");
+                "WARNING! You're not using Proxy because appsettings.json doesn't have \"Proxy\" key in \"BotSettings\" section.\n");
         }
 
+        httpClientHandler.Proxy = proxy is not null ? new WebProxy(proxy) : HttpClient.DefaultProxy;
+        httpClientHandler.UseProxy = true;
+        
         _bot = new TelegramBotClient(token, new HttpClient(httpClientHandler));
         return _bot;
     }

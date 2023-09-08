@@ -11,4 +11,9 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<BotMember> Members { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+    }
 }
