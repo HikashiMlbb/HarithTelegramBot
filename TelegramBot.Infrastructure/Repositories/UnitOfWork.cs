@@ -16,6 +16,6 @@ public class UnitOfWork : IUnitOfWork
     
     public async Task<int> CompleteAsync(CancellationToken cancellationToken)
     {
-        return await _db.SaveChangesAsync();
+        return await _db.SaveChangesAsync(cancellationToken);
     }
 }
