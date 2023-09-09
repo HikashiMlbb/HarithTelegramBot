@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.ValueObjects;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 #pragma warning disable CS8603 // Possible null reference return.
 
@@ -14,7 +15,7 @@ public class BotMemberConfiguration : IEntityTypeConfiguration<BotMember>
     public void Configure(EntityTypeBuilder<BotMember> builder)
     {
         builder.ToTable("Members");
-        builder.HasKey("Id");
+        builder.HasKey(m => m.Id);
 
         builder.HasKey(m => m.Id);
 
@@ -33,7 +34,7 @@ public class BotMemberConfiguration : IEntityTypeConfiguration<BotMember>
             .HasColumnName("Current experience")
             .HasDefaultValue(0);
 
-        builder.OwnsOne(m => m.Account, a =>
+        /*builder.OwnsOne(m => m.Account, a =>
         {
             a.WithOwner();
 
@@ -43,6 +44,12 @@ public class BotMemberConfiguration : IEntityTypeConfiguration<BotMember>
             a.Property(account => account.ChatId)
                 .HasColumnName("ChatId")
                 .IsRequired();
-        });
+        });*/
+
+        builder
+            .Property(m => m.Account)
+            .HasConversion(
+                v => JsonConvert.SerializeObject(v),
+                v => JsonConvert.DeserializeObject<Account>(v));
     }
 }

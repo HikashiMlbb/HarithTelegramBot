@@ -5,7 +5,7 @@ namespace TelegramBot.Domain.Entities;
 
 public sealed class BotMember
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string FirstName { get; set; }
     public Account Account { get; set; }
     public int Level { get; set; }

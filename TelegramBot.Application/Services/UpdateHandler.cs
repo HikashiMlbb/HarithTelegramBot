@@ -17,14 +17,11 @@ public class UpdateHandler : IUpdateHandler
     {
         _logger = logger.ForContext<UpdateHandler>();
         _commandExecutor = commandExecutor;
-        
-        _logger.Information("Hello, brother! {number}", 13);
     }
 
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        _logger.Information("I've got an update!");
         // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
         switch (update.Type)
         {
