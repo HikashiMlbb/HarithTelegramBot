@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot.Types;
-using TelegramBot.Application.Commands.Common.AttributesAndInterfaces;
+using TelegramBot.Application.Data.Commands.Common.AttributesAndInterfaces;
 
-namespace TelegramBot.Application.Interfaces;
+namespace TelegramBot.Application.Data.Interfaces;
 
 public interface ICommandExecutor
 {

@@ -1,10 +1,12 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TelegramBot.Application.Commands.Common.AttributesAndInterfaces;
-using TelegramBot.Application.Interfaces;
+using TelegramBot.Application.Data.Commands.Common.AttributesAndInterfaces;
+using TelegramBot.Application.Data.Constraints;
+using TelegramBot.Application.Data.Interfaces;
 
 namespace TelegramBot.Application.Services;
 
@@ -12,39 +14,32 @@ public class UpdateHandler : IUpdateHandler
 {
     private readonly ILogger _logger;
     private readonly ICommandExecutor _commandExecutor;
+    private readonly IEnumerable<IHandler> _handlers;
 
-    public UpdateHandler(ILogger logger, ICommandExecutor commandExecutor)
+    public UpdateHandler(ILogger logger, ICommandExecutor commandExecutor, IServiceProvider serviceProvider)
     {
         _logger = logger.ForContext<UpdateHandler>();
         _commandExecutor = commandExecutor;
+
+        _handlers = serviceProvider.GetServices<IHandler>();
     }
 
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
-        switch (update.Type)
+        if (!BotConstraints.ReceiverOptions.AllowedUpdates!.Contains(update.Type))
         {
-            
-            case UpdateType.Message:
-                Message message = update.Message!;
-                // Checks if user has written a bot command at the begin of the message.
-                if (update.Message!.Entities is { } entities && entities.Any(IsCommand))
-                {
-                    string textCommand = string.Concat(message.Text!.Split(' ').First().Skip(1));
-                    ICommonCommand? command = await _commandExecutor.FindCommandAsync(textCommand);
-                    if (command is not null)
-                    {
-                        _logger.Debug("Hello, world!");
-                        await _commandExecutor.ExecuteCommandAsync(command, message, cancellationToken);
-                    }
-                    break;
-                }
-                
-                break;
-                
-                bool IsCommand(MessageEntity entity) => entity is { Type: MessageEntityType.BotCommand, Offset: 0 };
+            return;
         }
+
+        IHandler? handler = _handlers.FirstOrDefault(handler => handler.UpdateType == update.Type);
+
+        if (handler is null)
+        {
+            return;
+        }
+
+        await handler.HandleAsync(update, cancellationToken);
     }
 
     public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,

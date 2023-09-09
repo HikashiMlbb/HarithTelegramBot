@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using TelegramBot.Application.Interfaces;
+using TelegramBot.Application.Data.Interfaces;
 
 namespace TelegramBot.Application.Services;
 

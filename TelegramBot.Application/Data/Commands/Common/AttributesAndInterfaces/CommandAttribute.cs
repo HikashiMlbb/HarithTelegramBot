@@ -1,4 +1,4 @@
-﻿namespace TelegramBot.Application.Commands.Common.AttributesAndInterfaces;
+﻿namespace TelegramBot.Application.Data.Commands.Common.AttributesAndInterfaces;
 
 public class CommandAttribute : Attribute
 {

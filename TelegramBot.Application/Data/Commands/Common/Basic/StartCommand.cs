@@ -1,14 +1,13 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using TelegramBot.Application.Commands.Common.AttributesAndInterfaces;
-using TelegramBot.Application.Interfaces;
+using TelegramBot.Application.Data.Commands.Common.AttributesAndInterfaces;
+using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.Exceptions.Members;
 using TelegramBot.Domain.Interfaces;
 using TelegramBot.Domain.ValueObjects;
-using TelegramBot.Infrastructure.Data;
 
-namespace TelegramBot.Application.Commands.Common.Basic;
+namespace TelegramBot.Application.Data.Commands.Common.Basic;
 
 [Command("start")]
 public class StartCommand : ICommonCommand
