@@ -6,7 +6,6 @@ public sealed class BotOptions
 {
     public const string PathToSection = nameof(BotOptions);
     
-    [Required]
-    public string Token { get; init; } = null!;
+    public string? Token { get; init; } = null!;
     public string? Proxy { get; init; }
 }

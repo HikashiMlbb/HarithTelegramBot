@@ -3,6 +3,7 @@ using Serilog.Core;
 using TelegramBot.Application;
 using TelegramBot.Service;
 using TelegramBot.Infrastructure;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using ILogger = Serilog.ILogger;
 
 IHost host = Host.CreateDefaultBuilder(args)
