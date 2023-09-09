@@ -4,7 +4,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Commands.Common.AttributesAndInterfaces;
-using TelegramBot.Application.Services.Interfaces;
+using TelegramBot.Application.Interfaces;
 
 namespace TelegramBot.Application.Services;
 

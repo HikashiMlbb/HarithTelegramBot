@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Application.Commands.Common.AttributesAndInterfaces;
-using TelegramBot.Application.Services.Interfaces;
+using TelegramBot.Application.Interfaces;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.Exceptions.Members;
 using TelegramBot.Domain.Interfaces;

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TelegramBot.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TelegramBot.Infrastructure.Data;
 namespace TelegramBot.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230909100020_ExplainedBotMemberEntity")]
+    partial class ExplainedBotMemberEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace TelegramBot.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("TelegramBot.Domain.Entities.BotMember", b =>
                 {
-                    b.OwnsOne("TelegramBot.Domain.Entities.BotMember.Account#TelegramBot.Domain.ValueObjects.Account", "Account", b1 =>
+                    b.OwnsOne("TelegramBot.Domain.ValueObjects.Account", "Account", b1 =>
                         {
                             b1.Property<Guid>("BotMemberId")
                                 .HasColumnType("uniqueidentifier");
@@ -67,7 +70,7 @@ namespace TelegramBot.Infrastructure.Data.Migrations
 
                             b1.HasKey("BotMemberId");
 
-                            b1.ToTable("Members", (string)null);
+                            b1.ToTable("Members");
 
                             b1.WithOwner()
                                 .HasForeignKey("BotMemberId");

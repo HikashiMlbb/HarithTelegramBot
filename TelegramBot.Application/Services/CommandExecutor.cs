@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Application.Commands.Common.AttributesAndInterfaces;
-using TelegramBot.Application.Services.Interfaces;
+using TelegramBot.Application.Interfaces;
 
 namespace TelegramBot.Application.Services;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TelegramBot.Domain.Exceptions.Database;
@@ -23,7 +24,8 @@ public static class DependencyInjection
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlite(connectionString);
+            //options.UseSqlite(connectionString);
+            options.UseSqlServer(connectionString);
         }, ServiceLifetime.Singleton);
 
         services.AddSingleton<IUnitOfWork, UnitOfWork>();

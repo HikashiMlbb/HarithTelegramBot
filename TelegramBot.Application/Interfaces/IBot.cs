@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot;
 
-namespace TelegramBot.Application.Services.Interfaces;
+namespace TelegramBot.Application.Interfaces;
 
 public interface IBot
 {

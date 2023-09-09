@@ -18,7 +18,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         
         services.AddHostedService<Worker>();
         
-        services.AddInfrastructure(hostCtx.Configuration);
+        services.AddInfrastructure(hostCtx.Configuration, "SqlServerDefault");
         
         services.AddApplication();
     })
