@@ -12,22 +12,23 @@ namespace TelegramBot.Application.Data.Commands.Common.Basic;
 [Command("start")]
 public class StartCommand : ICommonCommand
 {
-    private readonly IUnitOfWork _uow;
     private readonly ITelegramBotClient _bot;
-    
+    private readonly IUnitOfWork _uow;
+
     public StartCommand(IUnitOfWork db, IBot bot)
     {
         _uow = db;
         _bot = bot.CurrentBot;
     }
+
     public async Task ExecuteAsync(Message message, CancellationToken cancellationToken)
     {
-        long telegramId = message.From!.Id;
-        long chatId = message.Chat.Id;
-        
-        Account account = new Account(telegramId, chatId);
-        
-        BotMember member = new BotMember(message.From!.FirstName, account);
+        var telegramId = message.From!.Id;
+        var chatId = message.Chat.Id;
+
+        var account = new Account(telegramId, chatId);
+
+        var member = new BotMember(message.From!.FirstName, account);
 
         try
         {
@@ -35,17 +36,16 @@ public class StartCommand : ICommonCommand
             await _uow.CompleteAsync(cancellationToken);
             await _bot.SendTextMessageAsync(chatId, "You've registered!", cancellationToken: cancellationToken);
         }
-        catch (MemberAlreadyExistsException )
+        catch (MemberAlreadyExistsException)
         {
-            BotMember foundMember = (await _uow.Members.FindUserByAccountAsync(account, cancellationToken))!;
-            string messageToSend = $"""
-                             You're already registered!
-                             Your level: {foundMember.Level}
-                             Your experience: {foundMember.Experience}
-                             """;
+            var foundMember = (await _uow.Members.FindUserByAccountAsync(account, cancellationToken))!;
+            var messageToSend = $"""
+                                 You're already registered!
+                                 Your level: {foundMember.Level}
+                                 Your experience: {foundMember.Experience}
+                                 """;
             await _bot.SendTextMessageAsync(chatId, messageToSend, protectContent: true,
                 replyToMessageId: message.MessageId, cancellationToken: cancellationToken);
         }
-        
     }
 }

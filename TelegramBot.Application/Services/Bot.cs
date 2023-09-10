@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using TelegramBot.Application.Data.Constraints;
@@ -15,79 +15,73 @@ namespace TelegramBot.Application.Services;
 
 public class Bot : IBot
 {
+    private readonly ILogger _logger = Log.ForContext<Bot>();
     private ITelegramBotClient? _bot;
-    private readonly BotOptions _botBotOptions;
-    private readonly ILogger<Bot> _logger;
-    private readonly IConfiguration _config;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IStoppingToken _stoppingToken;
-    private readonly IHostEnvironment _hostEnvironment;
-    private bool _isRunning = false;
+    private bool _isRunning;
 
-    public Bot(IOptions<BotOptions> botOptions, 
-               ILogger<Bot> logger,
-               IConfiguration config, 
-               IStoppingToken stoppingToken, 
-               IServiceProvider serviceProvider,
-               IHostEnvironment hostEnvironment)
+    public Bot(IOptions<BotOptions> botOptions,
+        IConfiguration config,
+        IServiceProvider serviceProvider,
+        IStoppingToken stoppingToken,
+        IHostEnvironment hostEnvironment)
     {
         _botBotOptions = botOptions.Value;
-        _logger = logger;
         _config = config;
-        _stoppingToken = stoppingToken;
         _serviceProvider = serviceProvider;
+        _stoppingToken = stoppingToken;
         _hostEnvironment = hostEnvironment;
     }
 
     public ITelegramBotClient CurrentBot => GetBot();
+
     public async Task StartAsync()
     {
-        await Task.Run(() =>
-        {
-            if (_isRunning)
-            {
-                return;
-            }
+        await Task.Run(Start);
+    }
 
-            IUpdateHandler handler = _serviceProvider.GetRequiredService<IUpdateHandler>();
-            
-            CurrentBot.StartReceiving(
-                handler,
-                BotConstraints.ReceiverOptions,
-                _stoppingToken.Token);
+    private void Start()
+    {
+        if (_isRunning) return;
 
-            _isRunning = true;
-        });
+        var handler = _serviceProvider.GetRequiredService<IUpdateHandler>();
+
+        CurrentBot.StartReceiving(
+            handler,
+            BotConstraints.ReceiverOptions,
+            _stoppingToken.Token);
+
+        _isRunning = true;
     }
 
     private ITelegramBotClient GetBot()
     {
-        if (_bot != null)
-        {
-            return _bot;
-        }
+        if (_bot != null) return _bot;
 
-        HttpClientHandler httpClientHandler = new HttpClientHandler();
+        var httpClientHandler = new HttpClientHandler();
 
-        string? token = _hostEnvironment.IsDevelopment() ? _config["BotToken"] : _botBotOptions.Token;
+        var token = _hostEnvironment.IsDevelopment() ? _config["BotToken"] : _botBotOptions.Token;
 
-        if (token is null)
-        {
-            throw new TokenIsEmptyException();
-        }
-        
-        string? proxy = _botBotOptions.Proxy;
+        if (token is null) throw new TokenIsEmptyException();
+
+        var proxy = _botBotOptions.Proxy;
 
         if (proxy is null)
-        {
-            _logger.LogWarning(
+            _logger.Warning(
                 "WARNING! You're not using Proxy because appsettings.json doesn't have \"Proxy\" key in \"BotSettings\" section.\n");
-        }
 
         httpClientHandler.Proxy = proxy is not null ? new WebProxy(proxy) : HttpClient.DefaultProxy;
-        httpClientHandler.UseProxy = true;
-        
+
         _bot = new TelegramBotClient(token, new HttpClient(httpClientHandler));
         return _bot;
     }
+
+    #region DI Fields
+
+    private readonly BotOptions _botBotOptions;
+    private readonly IConfiguration _config;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IStoppingToken _stoppingToken;
+    private readonly IHostEnvironment _hostEnvironment;
+
+    #endregion
 }

@@ -5,8 +5,8 @@ namespace TelegramBot.Domain.Exceptions.Members;
 [Serializable]
 public sealed class MemberAlreadyExistsException : Exception
 {
-    public MemberAlreadyExistsException(BotMember member) : base($"{member.FirstName} with data {{ tg://user?id={member.Account.TelegramId} and chat id ({member.Account.ChatId}) }} already exists in database")
+    public MemberAlreadyExistsException(BotMember member) : base(
+        $"{member.FirstName} with data {{ tg://user?id={member.Account.TelegramId} and chat id ({member.Account.ChatId}) }} already exists in database")
     {
-        
     }
 }

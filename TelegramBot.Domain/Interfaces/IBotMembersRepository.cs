@@ -36,7 +36,8 @@ public interface IBotMembersRepository
     /// <param name="predicate">Condition which should be used in finding users</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Returns a list of BotMembers which found by given condition</returns>
-    public Task<IEnumerable<BotMember>> FilterByAsync(Predicate<BotMember> predicate, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<BotMember>> FilterByAsync(Predicate<BotMember> predicate,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Rewards the user by experience. Can return MemberNotFoundException if there's no member in database

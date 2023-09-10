@@ -6,8 +6,8 @@ namespace TelegramBot.Service;
 
 public class Worker : BackgroundService
 {
-    private readonly ILogger _logger;
     private readonly IBot _bot;
+    private readonly ILogger _logger;
     private readonly IStoppingToken _stoppingToken;
 
     public Worker(IBot bot, IStoppingToken stoppingToken)
@@ -19,7 +19,7 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _stoppingToken.RegisterToken(stoppingToken);
+        _stoppingToken.Token = stoppingToken;
         try
         {
             await _bot.StartAsync();
@@ -29,10 +29,7 @@ public class Worker : BackgroundService
             _logger.Fatal("Fatality in Worker service: {err}", e.ToString());
             return;
         }
-        
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await Task.Delay(10000, stoppingToken);
-        }
+
+        while (!stoppingToken.IsCancellationRequested) await Task.Delay(10000, stoppingToken);
     }
 }

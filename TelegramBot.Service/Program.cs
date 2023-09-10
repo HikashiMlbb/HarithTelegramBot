@@ -1,24 +1,22 @@
 using Serilog;
-using Serilog.Core;
 using TelegramBot.Application;
-using TelegramBot.Service;
 using TelegramBot.Infrastructure;
-using Microsoft.Extensions.Configuration.UserSecrets;
+using TelegramBot.Service;
 using ILogger = Serilog.ILogger;
 
-IHost host = Host.CreateDefaultBuilder(args)
+var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostCtx, services) =>
     {
-        using Logger logger = new LoggerConfiguration()
+        using var logger = new LoggerConfiguration()
             .ReadFrom.Configuration(hostCtx.Configuration)
             .CreateLogger();
 
         Log.Logger = logger;
-        
+
         services.AddSingleton<ILogger>(logger);
-        
+
         services.AddHostedService<Worker>();
-        
+
         services.AddInfrastructure(hostCtx.Configuration, "SqlServerDefault");
         services.AddApplication();
     })

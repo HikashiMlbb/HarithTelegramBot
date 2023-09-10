@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot.Polling;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Data.Commands.Common.AttributesAndInterfaces;
 using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Application.Services;
@@ -12,7 +15,7 @@ public static class DependencyInjection
     {
         AddCommonCommands(services);
         AddUpdateHandlers(services);
-        
+
         // Adding services
         services.AddSingleton<IBot, Bot>();
         services.AddSingleton<IUpdateHandler, UpdateHandler>();
@@ -22,27 +25,38 @@ public static class DependencyInjection
         return services;
     }
 
-    private static void AddUpdateHandlers(IServiceCollection services)
+    public static T? GetAttribute<T>(this ICommonCommand command) where T : Attribute
     {
-        Type[] types = typeof(DependencyInjection).Assembly.GetTypes();
-        Type typeofInterface = typeof(IHandler);
-
-        foreach (Type type in types.Where(t => t is { IsClass: true, IsPublic: true } && t.IsAssignableTo(typeofInterface)))
-        {
-            services.AddSingleton(typeofInterface, type);
-        }
+        return command.GetType().GetCustomAttribute<T>();
     }
 
-    private static IServiceCollection AddCommonCommands(IServiceCollection services)
+    public static bool IsCommand(this Message message)
     {
-        Type[] types = typeof(DependencyInjection).Assembly.GetTypes();
-        Type typeofInterface = typeof(ICommonCommand);
-
-        foreach (Type type in types.Where(t => t is { IsClass: true, IsPublic: true } && t.IsAssignableTo(typeofInterface)))
-        {
-            services.AddSingleton(typeofInterface, type);
-        }
-
-        return services;
+        return message.Entities is { } entities &&
+               entities.Any(entity => entity is { Type: MessageEntityType.BotCommand, Offset: 0 });
     }
+
+    #region Privates
+
+    private static void AddUpdateHandlers(this IServiceCollection services)
+    {
+        var types = typeof(DependencyInjection).Assembly.GetTypes();
+        var typeofInterface = typeof(IHandler);
+
+        foreach (var type in types.Where(t =>
+                     t is { IsClass: true, IsPublic: true } && t.IsAssignableTo(typeofInterface)))
+            services.AddSingleton(typeofInterface, type);
+    }
+
+    private static void AddCommonCommands(IServiceCollection services)
+    {
+        var types = typeof(DependencyInjection).Assembly.GetTypes();
+        var typeofInterface = typeof(ICommonCommand);
+
+        Func<Type, bool> predicate = t => t is { IsClass: true, IsPublic: true } && t.IsAssignableTo(typeofInterface);
+
+        foreach (var type in types.Where(predicate)) services.AddSingleton(typeofInterface, type);
+    }
+
+    #endregion
 }

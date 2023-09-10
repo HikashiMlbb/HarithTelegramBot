@@ -2,10 +2,10 @@
 
 public class CommandAttribute : Attribute
 {
-    public string Name { get; init; }
-
     public CommandAttribute(string name)
     {
         Name = name;
     }
+
+    public string Name { get; init; }
 }

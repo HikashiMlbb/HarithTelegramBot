@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TelegramBot.Domain.Exceptions.Database;
@@ -13,26 +12,22 @@ namespace TelegramBot.Infrastructure;
 public static class DependencyInjection
 {
     private const string DefaultConnectionString = "SqliteDefault";
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config, string? connectionString = null)
+
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config,
+        string? connectionString = null)
     {
         connectionString = config.GetConnectionString(connectionString ?? DefaultConnectionString);
 
-        if (connectionString == null)
-        {
-            throw new ConnectionStringIsNotDefinedException(DefaultConnectionString);
-        }
+        if (connectionString == null) throw new ConnectionStringIsNotDefinedException(DefaultConnectionString);
 
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            //options.UseSqlite(connectionString);
-            options.UseSqlServer(connectionString);
-        }, ServiceLifetime.Singleton);
+        services.AddDbContext<ApplicationDbContext>(options => { options.UseSqlServer(connectionString); },
+            ServiceLifetime.Singleton);
 
         services.AddSingleton<IUnitOfWork, UnitOfWork>();
-        
+
         AddCustomOptions(services);
         AddRepositories(services);
-        
+
         return services;
     }
 

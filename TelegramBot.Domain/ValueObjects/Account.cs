@@ -5,19 +5,14 @@ namespace TelegramBot.Domain.ValueObjects;
 [Serializable]
 public class Account : ValueObject, IEquatable<Account>
 {
-    public long TelegramId { get; }
-    public long ChatId { get; }
-
-    public Account()
-    {
-        TelegramId = 0;
-        ChatId = 0;
-    }
     public Account(long telegramId, long chatId)
     {
         TelegramId = telegramId;
         ChatId = chatId;
     }
+
+    public long TelegramId { get; }
+    public long ChatId { get; }
 
     public bool Equals(Account? other)
     {

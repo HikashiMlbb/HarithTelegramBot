@@ -1,10 +1,8 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.ValueObjects;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 #pragma warning disable CS8603 // Possible null reference return.
 
