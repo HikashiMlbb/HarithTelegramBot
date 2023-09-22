@@ -30,7 +30,7 @@ public class UpdateHandler : IUpdateHandler
 
         if (handler is null) return;
 
-        await handler.HandleAsync(update, cancellationToken);
+        await handler.HandleAsync(update);
     }
 
     public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,

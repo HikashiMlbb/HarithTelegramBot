@@ -17,10 +17,12 @@ public static class DependencyInjection
         AddUpdateHandlers(services);
 
         // Adding services
-        services.AddSingleton<IBot, Bot>();
+        services.AddSingleton<IBot, BotService>();
         services.AddSingleton<IUpdateHandler, UpdateHandler>();
-        services.AddSingleton<IStoppingToken, StoppingToken>();
-        services.AddSingleton<ICommandExecutor, CommandExecutor>();
+        services.AddSingleton<IStoppingToken, CancellationService>();
+        services.AddSingleton<ICommandExecutor, CommandExecuteService>();
+        services.AddSingleton<IRewardService, RewardService>();
+        services.AddSingleton<IMemberService, MemberService>();
 
         return services;
     }

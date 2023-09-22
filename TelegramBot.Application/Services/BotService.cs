@@ -13,19 +13,19 @@ using TelegramBot.Infrastructure.Data.Options;
 
 namespace TelegramBot.Application.Services;
 
-public class Bot : IBot
+public class BotService : IBot
 {
-    private readonly ILogger _logger = Log.ForContext<Bot>();
+    private readonly ILogger _logger = Log.ForContext<BotService>();
     private ITelegramBotClient? _bot;
     private bool _isRunning;
 
-    public Bot(IOptions<BotOptions> botOptions,
+    public BotService(IOptions<BotSettings> botOptions,
         IConfiguration config,
         IServiceProvider serviceProvider,
         IStoppingToken stoppingToken,
         IHostEnvironment hostEnvironment)
     {
-        _botBotOptions = botOptions.Value;
+        _botSettings = botOptions.Value;
         _config = config;
         _serviceProvider = serviceProvider;
         _stoppingToken = stoppingToken;
@@ -59,11 +59,11 @@ public class Bot : IBot
 
         var httpClientHandler = new HttpClientHandler();
 
-        var token = _hostEnvironment.IsDevelopment() ? _config["BotToken"] : _botBotOptions.Token;
+        var token = _hostEnvironment.IsDevelopment() ? _config["BotToken"] : _botSettings.Token;
 
         if (token is null) throw new TokenIsEmptyException();
 
-        var proxy = _botBotOptions.Proxy;
+        var proxy = _botSettings.Proxy;
 
         if (proxy is null)
             _logger.Warning(
@@ -77,7 +77,7 @@ public class Bot : IBot
 
     #region DI Fields
 
-    private readonly BotOptions _botBotOptions;
+    private readonly BotSettings _botSettings;
     private readonly IConfiguration _config;
     private readonly IServiceProvider _serviceProvider;
     private readonly IStoppingToken _stoppingToken;

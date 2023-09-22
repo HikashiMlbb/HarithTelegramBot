@@ -33,8 +33,8 @@ public static class DependencyInjection
 
     private static void AddCustomOptions(IServiceCollection services)
     {
-        services.AddOptions<BotOptions>()
-            .BindConfiguration(BotOptions.PathToSection)
+        services.AddOptions<BotSettings>()
+            .BindConfiguration(BotSettings.PathToSection)
             .ValidateDataAnnotations()
             .ValidateOnStart();
     }

@@ -3,9 +3,9 @@ using TelegramBot.Application.Data.Interfaces;
 
 namespace TelegramBot.Application.Services;
 
-public class StoppingToken : IStoppingToken
+public class CancellationService : IStoppingToken
 {
-    private readonly ILogger _logger = Log.ForContext<StoppingToken>();
+    private readonly ILogger _logger = Log.ForContext<CancellationService>();
 
     private CancellationToken? _token;
 
