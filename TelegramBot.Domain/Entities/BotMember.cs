@@ -17,4 +17,7 @@ public sealed class BotMember
     public Account Account { get; set; }
     public int Level { get; set; }
     public float Experience { get; set; }
+    public float ExperienceToReward { get; set; }
+    public DateTime LastMessageAt { get; set; }
+    public DateTime LastRewardAt { get; set; }
 }

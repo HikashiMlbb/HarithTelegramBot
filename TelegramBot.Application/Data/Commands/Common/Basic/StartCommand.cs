@@ -13,11 +13,13 @@ namespace TelegramBot.Application.Data.Commands.Common.Basic;
 public class StartCommand : ICommonCommand
 {
     private readonly ITelegramBotClient _bot;
+    private readonly IMemberService _memberService;
     private readonly IUnitOfWork _uow;
 
-    public StartCommand(IUnitOfWork db, IBot bot)
+    public StartCommand(IUnitOfWork db, IBot bot, IMemberService memberService)
     {
         _uow = db;
+        _memberService = memberService;
         _bot = bot.CurrentBot;
     }
 
@@ -42,9 +44,9 @@ public class StartCommand : ICommonCommand
             var messageToSend = $"""
                                  You're already registered!
                                  Your level: {foundMember.Level}
-                                 Your experience: {foundMember.Experience}
+                                 Your experience: {foundMember.Experience:F}/{_memberService.GetRequiredExperience(foundMember)}
                                  """;
-            await _bot.SendTextMessageAsync(chatId, messageToSend, protectContent: true,
+            await _bot.SendTextMessageAsync(chatId, messageToSend,
                 replyToMessageId: message.MessageId, cancellationToken: cancellationToken);
         }
     }

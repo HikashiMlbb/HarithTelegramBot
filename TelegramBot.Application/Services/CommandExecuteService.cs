@@ -5,12 +5,12 @@ using TelegramBot.Application.Data.Interfaces;
 
 namespace TelegramBot.Application.Services;
 
-public class CommandExecutor : ICommandExecutor
+public class CommandExecuteService : ICommandExecutor
 {
     private readonly IEnumerable<ICommonCommand> _commands;
-    private readonly ILogger<CommandExecutor> _logger;
+    private readonly ILogger<CommandExecuteService> _logger;
 
-    public CommandExecutor(ILogger<CommandExecutor> logger, IEnumerable<ICommonCommand> commands)
+    public CommandExecuteService(ILogger<CommandExecuteService> logger, IEnumerable<ICommonCommand> commands)
     {
         _logger = logger;
         _commands = commands;

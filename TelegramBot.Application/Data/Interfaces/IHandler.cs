@@ -6,5 +6,5 @@ namespace TelegramBot.Application.Data.Interfaces;
 public interface IHandler
 {
     public UpdateType UpdateType { get; }
-    public Task HandleAsync(Update update, CancellationToken cancellationToken);
+    public Task HandleAsync(Update update);
 }
