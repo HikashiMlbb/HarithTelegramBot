@@ -1,8 +1,6 @@
 using Serilog;
-using TelegramBot.Application;
-using TelegramBot.Infrastructure;
+using Basic.Core;
 using TelegramBot.Service;
-using ILogger = Serilog.ILogger;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostCtx, services) =>
@@ -13,12 +11,11 @@ var host = Host.CreateDefaultBuilder(args)
 
         Log.Logger = logger;
 
-        services.AddSingleton<ILogger>(logger);
+        services.AddLogging(c => c.ClearProviders());
 
         services.AddHostedService<Worker>();
 
-        services.AddInfrastructure(hostCtx.Configuration, "SqlServerDefault");
-        services.AddApplication();
+        services.AddBasicCore(hostCtx);
     })
     .Build();
 

@@ -1,5 +1,5 @@
 using Serilog;
-using TelegramBot.Application.Data.Interfaces;
+using Basic.Application.Data.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace TelegramBot.Service;
@@ -7,8 +7,8 @@ namespace TelegramBot.Service;
 public class Worker : BackgroundService
 {
     private readonly IBot _bot;
-    private readonly ILogger _logger;
     private readonly IStoppingToken _stoppingToken;
+    private readonly ILogger _logger;
 
     public Worker(IBot bot, IStoppingToken stoppingToken)
     {
