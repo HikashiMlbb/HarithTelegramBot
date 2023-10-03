@@ -2,7 +2,7 @@
 
 namespace Basic.Application.Data.Interfaces;
 
-public interface IBot
+public interface IBotService
 {
     public ITelegramBotClient CurrentBot { get; }
     public Task StartAsync();

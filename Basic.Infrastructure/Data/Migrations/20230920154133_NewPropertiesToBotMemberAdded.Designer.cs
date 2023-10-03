@@ -11,7 +11,7 @@ using Basic.Infrastructure.Data;
 
 namespace Basic.Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(BasicPartitionContext))]
     [Migration("20230920154133_NewPropertiesToBotMemberAdded")]
     partial class NewPropertiesToBotMemberAdded
     {

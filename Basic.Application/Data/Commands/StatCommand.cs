@@ -15,11 +15,11 @@ public class StatCommand : ICommonCommand
     private readonly IMemberService _memberService;
     private readonly ITelegramBotClient _bot;
     
-    public StatCommand(IUnitOfWork uow, IMemberService memberService, IBot bot)
+    public StatCommand(IUnitOfWork uow, IMemberService memberService, IBotService botService)
     {
         _uow = uow;
         _memberService = memberService;
-        _bot = bot.CurrentBot;
+        _bot = botService.CurrentBot;
     }
     public async Task ExecuteAsync(Message message, CancellationToken cancellationToken)
     {

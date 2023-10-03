@@ -6,14 +6,14 @@ namespace TelegramBot.Service;
 
 public class Worker : BackgroundService
 {
-    private readonly IBot _bot;
+    private readonly IBotService _botService;
     private readonly IStoppingToken _stoppingToken;
     private readonly ILogger _logger;
 
-    public Worker(IBot bot, IStoppingToken stoppingToken)
+    public Worker(IBotService botService, IStoppingToken stoppingToken)
     {
         _logger = Log.ForContext<Worker>();
-        _bot = bot;
+        _botService = botService;
         _stoppingToken = stoppingToken;
     }
 
@@ -22,7 +22,7 @@ public class Worker : BackgroundService
         _stoppingToken.Token = stoppingToken;
         try
         {
-            await _bot.StartAsync();
+            await _botService.StartAsync();
         }
         catch (Exception e)
         {

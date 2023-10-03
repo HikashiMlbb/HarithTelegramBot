@@ -1,19 +1,22 @@
-﻿using Basic.Infrastructure.Data;
+﻿using Basic.Domain.Entities;
+using Basic.Infrastructure.Data;
 using Basic.Domain.Interfaces;
 
 namespace Basic.Infrastructure.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly ApplicationDbContext _db;
+    private readonly BasicPartitionContext _db;
 
-    public UnitOfWork(ApplicationDbContext db)
+    public UnitOfWork(BasicPartitionContext db)
     {
-        Members = new BotMembersRepository(db);
+        Members = new MembersRepository(db);
+        Events = new EventsRepository(db);
         _db = db;
     }
 
-    public IBotMembersRepository Members { get; init; }
+    public IMembersRepository Members { get; init; }
+    public IEventsRepository Events { get; init; }
 
     public async Task<int> CompleteAsync(CancellationToken cancellationToken)
     {

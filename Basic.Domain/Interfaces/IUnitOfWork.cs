@@ -2,7 +2,8 @@
 
 public interface IUnitOfWork
 {
-    public IBotMembersRepository Members { get; init; }
+    public IMembersRepository Members { get; init; }
+    public IEventsRepository Events { get; init; }
 
     public Task<int> CompleteAsync(CancellationToken cancellationToken);
 }

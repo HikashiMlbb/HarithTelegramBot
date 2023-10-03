@@ -20,7 +20,7 @@ public static class DependencyInjection
 
         if (connectionString == null) throw new ConnectionStringIsNotDefinedException(DefaultConnectionString);
 
-        services.AddDbContext<ApplicationDbContext>(options => { options.UseSqlServer(connectionString); },
+        services.AddDbContext<BasicPartitionContext>(options => { options.UseSqlServer(connectionString); },
             ServiceLifetime.Singleton);
 
         services.AddSingleton<IUnitOfWork, UnitOfWork>();

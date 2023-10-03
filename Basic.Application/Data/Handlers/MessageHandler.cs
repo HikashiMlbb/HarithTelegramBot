@@ -12,16 +12,16 @@ namespace Basic.Application.Data.Handlers;
 // ReSharper disable once UnusedType.Global
 public class MessageHandler : IHandler
 {
-    private readonly IBot _bot;
+    private readonly IBotService _botService;
     private readonly CancellationToken _cancellationToken;
     private readonly ICommandExecutor _commandExecutor;
     private readonly IRewardService _rewardService;
     private readonly IUnitOfWork _uow;
 
-    public MessageHandler(IBot bot, ICommandExecutor commandExecutor, IRewardService rewardService, IUnitOfWork uow,
+    public MessageHandler(IBotService botService, ICommandExecutor commandExecutor, IRewardService rewardService, IUnitOfWork uow,
         IStoppingToken stoppingToken)
     {
-        _bot = bot;
+        _botService = botService;
         _commandExecutor = commandExecutor;
         _rewardService = rewardService;
         _uow = uow;
@@ -69,7 +69,7 @@ public class MessageHandler : IHandler
                                      Поздравляем <a href="tg://user?id={member.Account.TelegramId}">{member.FirstName}</a> с
                                      достижением {member.Level}-го уровня! 🎉🎉🎉
                                      """;
-        await _bot.CurrentBot.SendTextMessageAsync(chatId, messageToCongratulate,
+        await _botService.CurrentBot.SendTextMessageAsync(chatId, messageToCongratulate,
             parseMode: ParseMode.Html,
             disableNotification: true,
             cancellationToken: _cancellationToken);

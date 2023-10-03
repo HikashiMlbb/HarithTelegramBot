@@ -9,11 +9,11 @@ using Basic.Domain.ValueObjects;
 
 namespace Basic.Infrastructure.Repositories;
 
-public class BotMembersRepository : IBotMembersRepository
+public class MembersRepository : IMembersRepository
 {
-    private readonly ApplicationDbContext _db;
+    private readonly BasicPartitionContext _db;
 
-    public BotMembersRepository(ApplicationDbContext db)
+    public MembersRepository(BasicPartitionContext db)
     {
         _db = db;
     }
@@ -34,14 +34,14 @@ public class BotMembersRepository : IBotMembersRepository
     public async Task<IEnumerable<Member>> FindUsersByChatIdAsync(long id,
         CancellationToken cancellationToken = default)
     {
-        return await Task.Run(() => _db.Set<Member>().Where(member => member.Account.ChatId == id), cancellationToken);
+        return await Task.Run(() => _db.Set<Member>().AsNoTracking().Where(member => member.Account.ChatId == id), cancellationToken);
     }
 
     public async Task<IEnumerable<Member>> FilterByAsync(Predicate<Member> predicate,
         CancellationToken cancellationToken = default)
     {
         return await Task.Run(
-            () => _db.Set<Member>().Where(Expression.Lambda<Func<Member, bool>>(Expression.Call(predicate.Method))),
+            () => _db.Set<Member>().AsNoTracking().Where(Expression.Lambda<Func<Member, bool>>(Expression.Call(predicate.Method))),
             cancellationToken);
     }
 

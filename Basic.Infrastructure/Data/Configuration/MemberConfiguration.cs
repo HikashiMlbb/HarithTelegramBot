@@ -8,7 +8,7 @@ using Basic.Domain.ValueObjects;
 
 namespace Basic.Infrastructure.Data.Configuration;
 
-public class BotMemberConfiguration : IEntityTypeConfiguration<Member>
+public class MemberConfiguration : IEntityTypeConfiguration<Member>
 {
     public void Configure(EntityTypeBuilder<Member> builder)
     {

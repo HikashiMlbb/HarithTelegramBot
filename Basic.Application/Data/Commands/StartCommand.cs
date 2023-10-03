@@ -16,14 +16,14 @@ public class StartCommand : ICommonCommand
     private readonly ITelegramBotClient _bot;
     private readonly IMemberService _memberService;
     private readonly IUnitOfWork _uow;
-    private readonly IBot _ibot;
+    private readonly IBotService _ibot;
 
-    public StartCommand(IUnitOfWork db, IBot bot, IMemberService memberService)
+    public StartCommand(IUnitOfWork db, IBotService botService, IMemberService memberService)
     {
         _uow = db;
         _memberService = memberService;
-        _ibot = bot;
-        _bot = bot.CurrentBot;
+        _ibot = botService;
+        _bot = botService.CurrentBot;
     }
 
     public async Task ExecuteAsync(Message message, CancellationToken cancellationToken)

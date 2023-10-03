@@ -17,7 +17,7 @@ public static class DependencyInjection
         AddUpdateHandlers(services);
 
         // Adding services
-        services.AddSingleton<IBot, BotService>();
+        services.AddSingleton<IBotService, BotServiceService>();
         services.AddSingleton<IUpdateHandler, UpdateHandler>();
         services.AddSingleton<IStoppingToken, CancellationService>();
         services.AddSingleton<ICommandExecutor, CommandExecuteService>();

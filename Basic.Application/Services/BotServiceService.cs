@@ -13,13 +13,13 @@ using Basic.Infrastructure.Data.Options;
 
 namespace Basic.Application.Services;
 
-public class BotService : IBot
+public class BotServiceService : IBotService
 {
-    private readonly ILogger _logger = Log.ForContext<BotService>();
+    private readonly ILogger _logger = Log.ForContext<BotServiceService>();
     private ITelegramBotClient? _bot;
     private bool _isRunning;
 
-    public BotService(IOptions<BotSettings> botOptions,
+    public BotServiceService(IOptions<BotSettings> botOptions,
         IConfiguration config,
         IServiceProvider serviceProvider,
         IStoppingToken stoppingToken,

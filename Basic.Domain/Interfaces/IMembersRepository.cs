@@ -3,7 +3,7 @@ using Basic.Domain.Entities;
 
 namespace Basic.Domain.Interfaces;
 
-public interface IBotMembersRepository
+public interface IMembersRepository
 {
     // 1. Add new member to database
     /// <summary>
