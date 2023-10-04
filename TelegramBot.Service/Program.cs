@@ -1,5 +1,6 @@
 using Serilog;
-using Basic.Core;
+using TelegramBot.Application;
+using TelegramBot.Infrastructure;
 using TelegramBot.Service;
 
 var host = Host.CreateDefaultBuilder(args)
@@ -15,7 +16,8 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddHostedService<Worker>();
 
-        services.AddBasicCore(hostCtx);
+        services.AddApplication();
+        services.AddInfrastructure(hostCtx.Configuration, "Default");
     })
     .Build();
 

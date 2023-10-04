@@ -1,5 +1,5 @@
 using Serilog;
-using Basic.Application.Data.Interfaces;
+using TelegramBot.Application.Data.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace TelegramBot.Service;

@@ -23,8 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Basic.Application\Basic.Application.csproj" />
-        <ProjectReference Include="..\Basic.Core\Basic.Core.csproj" />
-        <ProjectReference Include="..\Basic.Infrastructure\Basic.Infrastructure.csproj" />
+        <ProjectReference Include="..\TelegramBot.Application\TelegramBot.Application.csproj" />
+        <ProjectReference Include="..\TelegramBot.Infrastructure\TelegramBot.Infrastructure.csproj" />
     </ItemGroup>
 </Project>
