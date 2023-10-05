@@ -1,14 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Service", "TelegramBot.Service\TelegramBot.Service.csproj", "{EA129B88-2AB9-4764-A84F-D0AAE47950F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Service", "src\TelegramBot.Service\TelegramBot.Service.csproj", "{EA129B88-2AB9-4764-A84F-D0AAE47950F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Application", "TelegramBot.Application\TelegramBot.Application.csproj", "{3E407AF5-07F4-4B37-BDFF-FCC3DAB0393E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Application", "src\TelegramBot.Application\TelegramBot.Application.csproj", "{3E407AF5-07F4-4B37-BDFF-FCC3DAB0393E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Domain", "TelegramBot.Domain\TelegramBot.Domain.csproj", "{9CAB6A84-9EF3-49B2-AD88-6ED7BF05EA0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Domain", "src\TelegramBot.Domain\TelegramBot.Domain.csproj", "{9CAB6A84-9EF3-49B2-AD88-6ED7BF05EA0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Infrastructure", "TelegramBot.Infrastructure\TelegramBot.Infrastructure.csproj", "{B7AE37A1-A057-4F16-8F93-A2F2305C599F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Infrastructure", "src\TelegramBot.Infrastructure\TelegramBot.Infrastructure.csproj", "{B7AE37A1-A057-4F16-8F93-A2F2305C599F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{887BC599-DC76-4D4A-B518-D153573FC665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot.Persistence", "src\TelegramBot.Persistence\TelegramBot.Persistence.csproj", "{CF0B687A-5CD3-468B-A509-A939ACEA7CF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,11 +34,16 @@ Global
 		{B7AE37A1-A057-4F16-8F93-A2F2305C599F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7AE37A1-A057-4F16-8F93-A2F2305C599F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7AE37A1-A057-4F16-8F93-A2F2305C599F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0B687A-5CD3-468B-A509-A939ACEA7CF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF0B687A-5CD3-468B-A509-A939ACEA7CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF0B687A-5CD3-468B-A509-A939ACEA7CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF0B687A-5CD3-468B-A509-A939ACEA7CF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EA129B88-2AB9-4764-A84F-D0AAE47950F0} = {887BC599-DC76-4D4A-B518-D153573FC665}
 		{3E407AF5-07F4-4B37-BDFF-FCC3DAB0393E} = {887BC599-DC76-4D4A-B518-D153573FC665}
 		{9CAB6A84-9EF3-49B2-AD88-6ED7BF05EA0A} = {887BC599-DC76-4D4A-B518-D153573FC665}
 		{B7AE37A1-A057-4F16-8F93-A2F2305C599F} = {887BC599-DC76-4D4A-B518-D153573FC665}
+		{CF0B687A-5CD3-468B-A509-A939ACEA7CF9} = {887BC599-DC76-4D4A-B518-D153573FC665}
 	EndGlobalSection
 EndGlobal
