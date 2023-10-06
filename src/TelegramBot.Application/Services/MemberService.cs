@@ -32,6 +32,7 @@ public class MemberService : IMemberService
                        Уровень: {member.Level}
                        Опыт: {currentExp:F}/{requiredExp}
                        [{string.Join(' ', progressBar)}]
+                       EXE: {member.ExperienceToReward} xp
                        """;
         return stat;
     }

@@ -1,8 +1,9 @@
-﻿using TelegramBot.Domain.ValueObjects;
+﻿using TelegramBot.Domain.Primitives;
+using TelegramBot.Domain.ValueObjects;
 
 namespace TelegramBot.Domain.Entities;
 
-public sealed class Member
+public sealed class Member : Entity
 {
     public Member(string firstName, Account account)
     {
@@ -11,8 +12,7 @@ public sealed class Member
         Level = 0;
         Experience = 0f;
     }
-
-    public int Id { get; set; }
+    
     public string FirstName { get; set; }
     public Account Account { get; set; }
     public int Level { get; set; }

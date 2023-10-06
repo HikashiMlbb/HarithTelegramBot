@@ -7,5 +7,5 @@ public interface IRewardingBuilder
     public IRewardingBuilder TryReward(Message message);
     public IRewardingBuilder LevelUp();
     public IRewardingBuilder UpdateLastRewardDate();
-    public bool Build(out int currentLevel);
+    public bool Build();
 }

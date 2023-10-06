@@ -11,10 +11,10 @@ internal class RewardingBuilder : IRewardingBuilder
     private readonly Func<Member, float> _getRequiredExperience;
     private readonly Member _member;
     private readonly IBotSettingsProvider _settings;
-    private bool _hasLevelUpped;
 
+    private bool _hasLevelUpped;
     private bool _isRewarded;
-    private bool _shouldUpdateDate = true;
+    private bool _shouldUpdateDate;
 
     public RewardingBuilder(Member member,
         IBotSettingsProvider settings,
@@ -28,7 +28,7 @@ internal class RewardingBuilder : IRewardingBuilder
     public IRewardingBuilder TryReward(Message message)
     {
         var interval = DateTime.UtcNow - _member.LastMessageAt;
-        if (interval <= _settings.GetRewardInterval()) return this;
+        if (interval <= _settings.GetMessageInterval()) return this;
 
         float experienceToAdd = default;
         _settings.GetRewardSystem()?.TryGetValue(message.Type.ToString(), out experienceToAdd);
@@ -46,10 +46,10 @@ internal class RewardingBuilder : IRewardingBuilder
 
         if (_isRewarded == false || interval <= _settings.GetRewardInterval())
         {
-            _shouldUpdateDate = false;
             return this;
         }
 
+        _shouldUpdateDate = true;
         _member.Experience += _member.ExperienceToReward;
         _member.ExperienceToReward = default;
 
@@ -60,7 +60,11 @@ internal class RewardingBuilder : IRewardingBuilder
 
     public IRewardingBuilder UpdateLastRewardDate()
     {
-        if (_isRewarded == false || !_shouldUpdateDate) return this;
+        if (_isRewarded)
+        {
+            _member.LastMessageAt = DateTime.UtcNow;
+        }
+        if (!_isRewarded || !_shouldUpdateDate) return this;
 
         _member.LastRewardAt = DateTime.UtcNow;
 
@@ -70,11 +74,9 @@ internal class RewardingBuilder : IRewardingBuilder
     /// <summary>
     ///     Build the builder
     /// </summary>
-    /// <param name="currentLevel">level which is current</param>
     /// <returns>True, if level has been upped. Else - false</returns>
-    public bool Build(out int currentLevel)
+    public bool Build()
     {
-        currentLevel = _member.Level;
         return _hasLevelUpped;
     }
 

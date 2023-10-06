@@ -2,12 +2,16 @@
 
 public abstract class Entity : IEquatable<Entity>
 {
+    protected Entity()
+    {
+        
+    }
     protected Entity(Guid id)
     {
         Id = id;
     }
 
-    private Guid Id { get; }
+    public Guid Id { get; }
 
     public bool Equals(Entity? other)
     {

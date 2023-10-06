@@ -17,7 +17,13 @@ public static class DependencyInjection
 
         if (connectionString == null) throw new ConnectionStringIsNotDefinedException(DefaultConnectionString);
 
-        services.AddDbContext<BasicPartitionContext>(options => { options.UseSqlServer(connectionString); },
+        services.AddDbContext<BasicPartitionContext>(options =>
+            {
+                options.UseNpgsql(connectionString, builder =>
+                {
+                    builder.EnableRetryOnFailure();
+                });
+            },
             ServiceLifetime.Singleton);
     }
 }

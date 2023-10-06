@@ -18,7 +18,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddHostedService<Worker>();
 
         services.AddApplication();
-        services.AddInfrastructure(hostCtx.Configuration, "Default");
+        services.AddInfrastructure(hostCtx.Configuration, "PostgreSQL");
         services.AddPersistence();
     })
     .Build();

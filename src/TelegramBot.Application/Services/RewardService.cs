@@ -29,12 +29,14 @@ public class RewardService : IRewardService
 
         if (member == null) return false;
 
-        var hasLevelUpped =
-            new RewardingBuilder(member, _botSettingsProvider, _memberService.GetRequiredExperience)
+        IRewardingBuilder rewardingBuilder =
+            new RewardingBuilder(member, _botSettingsProvider, _memberService.GetRequiredExperience);
+        
+        var hasLevelUpped = rewardingBuilder
                 .TryReward(message)
                 .LevelUp()
                 .UpdateLastRewardDate()
-                .Build(out var currentLevel);
+                .Build();
 
         return hasLevelUpped;
     }
