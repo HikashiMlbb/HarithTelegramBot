@@ -5,6 +5,7 @@ using Telegram.Bot.Types.Enums;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.ValueObjects;
 using TelegramBot.Application.Data.Interfaces;
+using TelegramBot.Application.Services;
 using TelegramBot.Domain.Repositories;
 
 namespace TelegramBot.Application.Data.Handlers;
@@ -58,8 +59,7 @@ public class MessageHandler : IHandler
         if (hasLevelUpped) await CongratulateMember(member, chatId);
 
         #endregion
-
-        member.LastMessageAt = DateTime.UtcNow;
+        
         await _uow.CompleteAsync(_cancellationToken);
     }
 
