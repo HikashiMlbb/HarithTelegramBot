@@ -43,7 +43,7 @@ public class MkEventCommand : ICommonCommand
 
         args = args.Replace(',', '.');
 
-        var regex = @"""(\w+)""\s(\d+(\.|,)?\d*)$";
+        var regex = @"""(.+)""\s(\d+(\.|,)?\d*)$";
         var match = Regex.Match(args, regex);
 
         if (!match.Success)
