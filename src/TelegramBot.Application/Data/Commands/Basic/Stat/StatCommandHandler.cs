@@ -1,21 +1,21 @@
-﻿using TelegramBot.Domain.Entities;
-using TelegramBot.Domain.ValueObjects;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Application.Data.Shared;
+using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.Repositories;
+using TelegramBot.Domain.ValueObjects;
 
-namespace TelegramBot.Application.Data.Commands;
+namespace TelegramBot.Application.Data.Commands.Basic.Stat;
 
 [Command("stat")]
-public class StatCommand : ICommonCommand
+public class StatCommandHandler : ITextCommandHandler<StatCommand>
 {
     private readonly IUnitOfWork _uow;
     private readonly IMemberService _memberService;
     private readonly ITelegramBotClient _bot;
     
-    public StatCommand(IUnitOfWork uow, IMemberService memberService, IBotService botService)
+    public StatCommandHandler(IUnitOfWork uow, IMemberService memberService, IBotService botService)
     {
         _uow = uow;
         _memberService = memberService;

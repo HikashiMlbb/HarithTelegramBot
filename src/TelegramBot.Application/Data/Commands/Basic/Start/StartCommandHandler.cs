@@ -1,27 +1,25 @@
-﻿using TelegramBot.Domain.Entities;
-using TelegramBot.Domain.Exceptions.Members;
-using TelegramBot.Domain.ValueObjects;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Application.Data.Shared;
+using TelegramBot.Domain.Entities;
+using TelegramBot.Domain.Exceptions.Members;
 using TelegramBot.Domain.Repositories;
+using TelegramBot.Domain.ValueObjects;
 
-namespace TelegramBot.Application.Data.Commands;
+namespace TelegramBot.Application.Data.Commands.Basic.Start;
 
 [Command("start")]
-public class StartCommand : ICommonCommand
+public class StartCommandHandler// : ITextCommandHandler<StartCommand>
 {
     private readonly ITelegramBotClient _bot;
     private readonly IMemberService _memberService;
     private readonly IUnitOfWork _uow;
-    private readonly IBotService _ibot;
 
-    public StartCommand(IUnitOfWork db, IBotService botService, IMemberService memberService)
+    public StartCommandHandler(IUnitOfWork db, IBotService botService, IMemberService memberService)
     {
         _uow = db;
         _memberService = memberService;
-        _ibot = botService;
         _bot = botService.CurrentBot;
     }
 
@@ -33,7 +31,6 @@ public class StartCommand : ICommonCommand
         var account = new Account(telegramId, chatId);
 
         var member = new Member(message.From!.FirstName, account);
-        ICommonCommand command = new StatCommand(_uow, _memberService, _ibot);
 
         try
         {
@@ -55,8 +52,3 @@ public class StartCommand : ICommonCommand
         }
     }
 }
-
-/* TODO:
- * - Create StatCommand to check out stats
- * - Make StartCommand get depend on StatCommand and call it when member has already registered himself.
- */

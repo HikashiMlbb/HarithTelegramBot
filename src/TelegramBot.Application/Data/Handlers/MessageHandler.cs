@@ -1,11 +1,9 @@
-﻿using TelegramBot.Application.Data.Shared;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.ValueObjects;
 using TelegramBot.Application.Data.Interfaces;
-using TelegramBot.Application.Services;
 using TelegramBot.Domain.Repositories;
 
 namespace TelegramBot.Application.Data.Handlers;
@@ -15,15 +13,15 @@ public class MessageHandler : IHandler
 {
     private readonly IBotService _botService;
     private readonly CancellationToken _cancellationToken;
-    private readonly ICommandExecutor _commandExecutor;
+    private readonly ICommandExecuteService _commandExecuteService;
     private readonly IRewardService _rewardService;
     private readonly IUnitOfWork _uow;
 
-    public MessageHandler(IBotService botService, ICommandExecutor commandExecutor, IRewardService rewardService, IUnitOfWork uow,
+    public MessageHandler(IBotService botService, ICommandExecuteService commandExecuteService, IRewardService rewardService, IUnitOfWork uow,
         IStoppingToken stoppingToken)
     {
         _botService = botService;
-        _commandExecutor = commandExecutor;
+        _commandExecuteService = commandExecuteService;
         _rewardService = rewardService;
         _uow = uow;
         _cancellationToken = stoppingToken.Token;
@@ -39,9 +37,9 @@ public class MessageHandler : IHandler
         {
             var textCommand = message.Text!.GetFirstCommand();
 
-            if (await _commandExecutor.FindCommandAsync(textCommand) is not { } command) return;
+            if (await _commandExecuteService.FindCommandAsync(textCommand) is not { } command) return;
 
-            await command.ExecuteAsync(message, _cancellationToken);
+            await _commandExecuteService.ExecuteCommandAsync(command, message, _cancellationToken);
 
             return;
         }
