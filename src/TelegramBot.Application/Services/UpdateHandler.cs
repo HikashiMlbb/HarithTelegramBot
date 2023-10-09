@@ -10,13 +10,13 @@ namespace TelegramBot.Application.Services;
 
 public class UpdateHandler : IUpdateHandler
 {
-    private readonly ICommandExecutor _commandExecutor;
+    private readonly ICommandExecuteService _commandExecuteService;
     private readonly IEnumerable<IHandler> _handlers;
     private readonly ILogger _logger = Log.ForContext<UpdateHandler>();
 
-    public UpdateHandler(ICommandExecutor commandExecutor, IServiceProvider serviceProvider)
+    public UpdateHandler(ICommandExecuteService commandExecuteService, IServiceProvider serviceProvider)
     {
-        _commandExecutor = commandExecutor;
+        _commandExecuteService = commandExecuteService;
 
         _handlers = serviceProvider.GetServices<IHandler>();
     }
@@ -39,7 +39,6 @@ public class UpdateHandler : IUpdateHandler
         await Task.Factory.StartNew(() =>
         {
             _logger.Error("Polling exception: {error}", exception);
-            throw new Exception("Polling exception");
         }, cancellationToken);
     }
 }

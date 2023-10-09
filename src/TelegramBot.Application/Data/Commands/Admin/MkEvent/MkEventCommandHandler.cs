@@ -1,24 +1,24 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using TelegramBot.Domain.Exceptions.Events;
 using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Application.Data.Shared;
+using TelegramBot.Domain.Exceptions.Events;
 using TelegramBot.Domain.Repositories;
 
-namespace TelegramBot.Application.Data.Commands.Admin;
+namespace TelegramBot.Application.Data.Commands.Admin.MkEvent;
 
 [Command("mkevnt")]
-public class MkEventCommand : ICommonCommand
+public class MkEventCommandHandler : ITextCommandHandler<MkEventCommand>
 {
-    private readonly ILogger _logger = Log.ForContext<MkEventCommand>();
+    private readonly ILogger _logger = Log.ForContext<MkEventCommandHandler>();
     private readonly ITelegramBotClient _bot;
     private readonly IUnitOfWork _uow;
 
-    public MkEventCommand(IBotService bot, IUnitOfWork uow)
+    public MkEventCommandHandler(IBotService bot, IUnitOfWork uow)
     {
         _uow = uow;
         _bot = bot.CurrentBot;
@@ -43,7 +43,7 @@ public class MkEventCommand : ICommonCommand
 
         args = args.Replace(',', '.');
 
-        var regex = @"""(\w+)""\s(\d+(\.|,)?\d*)$";
+        var regex = @"""(.+)""\s(\d+(\.|,)?\d*)$";
         var match = Regex.Match(args, regex);
 
         if (!match.Success)

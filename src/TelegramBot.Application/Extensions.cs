@@ -1,4 +1,4 @@
-﻿namespace TelegramBot.Application.Data.Shared;
+﻿namespace TelegramBot.Application;
 
 public static class Extensions
 {

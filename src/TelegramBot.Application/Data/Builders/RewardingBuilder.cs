@@ -1,4 +1,5 @@
-﻿using Telegram.Bot.Types;
+﻿using System.Diagnostics.Contracts;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Domain.Entities;
 using TelegramBot.Application.Data.Interfaces;
@@ -34,6 +35,22 @@ internal class RewardingBuilder : IRewardingBuilder
         _settings.GetRewardSystem()?.TryGetValue(message.Type.ToString(), out experienceToAdd);
 
         experienceToAdd = ComputeExperienceToAdd(message, experienceToAdd);
+        _member.ExperienceToReward += experienceToAdd;
+        _isRewarded = experienceToAdd > default(float);
+
+        return this;
+    }
+
+    public IRewardingBuilder TryReward(Message message, IEnumerable<Event> events)
+    {
+        var interval = DateTime.UtcNow - _member.LastMessageAt;
+        if (interval <= _settings.GetMessageInterval()) return this;
+
+        float experienceToAdd = default;
+        _settings.GetRewardSystem()?.TryGetValue(message.Type.ToString(), out experienceToAdd);
+
+        experienceToAdd = ComputeExperienceToAdd(message, experienceToAdd);
+        experienceToAdd = ComputeWithEvents(experienceToAdd, events);
         _member.ExperienceToReward += experienceToAdd;
         _isRewarded = experienceToAdd > default(float);
 
@@ -113,5 +130,11 @@ internal class RewardingBuilder : IRewardingBuilder
         return hasLevelUpped;
     }
 
+    [Pure]
+    private float ComputeWithEvents(float experienceToAdd, IEnumerable<Event> events)
+    {
+        var totalMultiplier = events.Select(@event => @event.Multiplier).Aggregate(1f, (acc, x) => acc * x);
+        return experienceToAdd * totalMultiplier;
+    }
     #endregion
 }

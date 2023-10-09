@@ -5,15 +5,15 @@ using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Application.Data.Shared;
 using TelegramBot.Domain.Repositories;
 
-namespace TelegramBot.Application.Data.Commands.Admin;
+namespace TelegramBot.Application.Data.Commands.Admin.Events;
 
 [Command("events")]
-public class EventsCommand : ICommonCommand
+public class EventsCommandHandler : ITextCommandHandler<EventsCommand>
 {
     private readonly ITelegramBotClient _bot;
     private readonly IUnitOfWork _uow;
 
-    public EventsCommand(IBotService bot, IUnitOfWork uow)
+    public EventsCommandHandler(IBotService bot, IUnitOfWork uow)
     {
         _bot = bot.CurrentBot;
         _uow = uow;
@@ -39,7 +39,7 @@ public class EventsCommand : ICommonCommand
         }
 
         var messageToSend = string.Join('\n', events.Select((@event, index) => $"{index + 1}. {@event.Name} -- x{@event.Multiplier:F}"));
-        var totalMultiplier = events.Select(x => x.Multiplier).Aggregate(0f, (acc, x) => acc + x);
+        var totalMultiplier = events.Select(x => x.Multiplier).Aggregate(1f, (acc, x) => acc * x);
         messageToSend += $"\nИтого: x{totalMultiplier:F}";
 
         await _bot.SendTextMessageAsync(chatId, messageToSend, replyToMessageId: message.MessageId, cancellationToken: cancellationToken);

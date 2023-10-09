@@ -1,38 +1,71 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Reflection;
+using Serilog;
 using Telegram.Bot.Types;
 using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Application.Data.Shared;
+using ILogger = Serilog.ILogger;
 
 namespace TelegramBot.Application.Services;
 
-public class CommandExecuteService : ICommandExecutor
+public class CommandExecuteService : ICommandExecuteService
 {
-    private readonly IEnumerable<ICommonCommand> _commands;
-    private readonly ILogger<CommandExecuteService> _logger;
+    private readonly ILogger _logger = Log.ForContext<CommandExecuteService>();
+    
+    private readonly IEnumerable<ITextCommand> _commands;
+    private readonly IServiceProvider _serviceProvider;
+    
 
-    public CommandExecuteService(ILogger<CommandExecuteService> logger, IEnumerable<ICommonCommand> commands)
+    public CommandExecuteService(IEnumerable<ITextCommand> commands, IServiceProvider serviceProvider)
     {
-        _logger = logger;
         _commands = commands;
+        _serviceProvider = serviceProvider;
     }
 
-    public async Task<ICommonCommand?> FindCommandAsync(string commandName)
+    public async Task<ITextCommand?> FindCommandAsync(string commandName)
     {
         return await Task.Run(() => FindCommand(commandName));
     }
 
-    public async Task ExecuteCommandAsync(ICommonCommand command, Message message, CancellationToken cancellationToken)
+    public async Task ExecuteCommandAsync(ITextCommand commandHandler, Message message, CancellationToken cancellationToken)
     {
-        await command.ExecuteAsync(message, cancellationToken);
+        await Task.Run(() => ExecuteCommand(commandHandler, message, cancellationToken), cancellationToken);
     }
 
-    private ICommonCommand? FindCommand(string commandName)
+    private Task ExecuteCommand(ITextCommand commandHandler, Message message, CancellationToken cancellationToken)
     {
-        return _commands.FirstOrDefault(Predicate);
+        var implementType = typeof(ITextCommandHandler<>).MakeGenericType(commandHandler.GetType());
+        var handler = _serviceProvider.GetService(implementType);
 
-        bool Predicate(ICommonCommand command)
+        if (handler is null)
         {
-            return command.GetAttribute<CommandAttribute>() is { } attribute && attribute.Name == commandName;
+            _logger.Information("Command handler not found!");
+            return Task.CompletedTask;
         }
+
+        var executeAsyncMethod = handler.GetType()
+            .GetMethod("ExecuteAsync", new[] { typeof(Message), typeof(CancellationToken) });
+
+        if (executeAsyncMethod is null)
+        {
+            _logger.Information("ExecuteAsync not found!");
+            return Task.CompletedTask;
+        }
+
+        executeAsyncMethod.Invoke(handler, new object[] { message, cancellationToken });
+        return Task.CompletedTask;
     }
+
+    #region Private Methods
+
+    private ITextCommand? FindCommand(string commandName)
+    {
+        return (
+            from command in _commands 
+            let result = command.GetType().GetCustomAttribute<CommandAttribute>()
+            where result?.Name == commandName 
+            select command).FirstOrDefault();
+    }
+
+    #endregion
+    
 }

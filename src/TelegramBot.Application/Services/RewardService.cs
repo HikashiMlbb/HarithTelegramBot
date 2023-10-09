@@ -2,6 +2,7 @@
 using TelegramBot.Domain.ValueObjects;
 using TelegramBot.Application.Data.Builders;
 using TelegramBot.Application.Data.Interfaces;
+using TelegramBot.Domain.Entities;
 using TelegramBot.Domain.Interfaces;
 using TelegramBot.Domain.Repositories;
 
@@ -31,9 +32,10 @@ public class RewardService : IRewardService
 
         IRewardingBuilder rewardingBuilder =
             new RewardingBuilder(member, _botSettingsProvider, _memberService.GetRequiredExperience);
+        IEnumerable<Event> events = await _uow.Events.AllAsync(account.ChatId, _stoppingToken.Token);
         
         var hasLevelUpped = rewardingBuilder
-                .TryReward(message)
+                .TryReward(message, events)
                 .LevelUp()
                 .UpdateLastRewardDate()
                 .Build();
