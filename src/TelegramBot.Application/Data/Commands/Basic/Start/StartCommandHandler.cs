@@ -10,7 +10,7 @@ using TelegramBot.Domain.ValueObjects;
 namespace TelegramBot.Application.Data.Commands.Basic.Start;
 
 [Command("start")]
-public class StartCommandHandler// : ITextCommandHandler<StartCommand>
+public class StartCommandHandler : ITextCommandHandler<StartCommand>
 {
     private readonly ITelegramBotClient _bot;
     private readonly IMemberService _memberService;
