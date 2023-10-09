@@ -1,22 +1,22 @@
-﻿using TelegramBot.Domain.Exceptions.Events;
-using Serilog;
+﻿using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Data.Interfaces;
 using TelegramBot.Application.Data.Shared;
+using TelegramBot.Domain.Exceptions.Events;
 using TelegramBot.Domain.Repositories;
 
-namespace TelegramBot.Application.Data.Commands.Admin;
+namespace TelegramBot.Application.Data.Commands.Admin.RmEvent;
 
 [Command("rmevnt")]
-public class RmEventCommand : ICommonCommand
+public class RmEventCommandHandler : ITextCommandHandler<RmEventCommand>
 {
     private readonly ITelegramBotClient _bot;
     private readonly IUnitOfWork _uow;
-    private readonly ILogger _logger = Log.ForContext<RmEventCommand>();
+    private readonly ILogger _logger = Log.ForContext<RmEventCommandHandler>();
 
-    public RmEventCommand(IBotService bot, IUnitOfWork uow)
+    public RmEventCommandHandler(IBotService bot, IUnitOfWork uow)
     {
         _uow = uow;
         _bot = bot.CurrentBot;
