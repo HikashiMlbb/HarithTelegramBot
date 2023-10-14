@@ -13,8 +13,6 @@ var host = Host.CreateDefaultBuilder(args)
 
         Log.Logger = logger;
 
-        services.AddLogging(c => c.ClearProviders());
-
         services.AddHostedService<Worker>();
 
         services.AddApplication();
