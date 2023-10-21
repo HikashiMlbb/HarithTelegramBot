@@ -5,10 +5,10 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
-using TelegramBot.Domain.Exceptions.Running;
 using TelegramBot.Application.Data.Constraints;
 using TelegramBot.Application.Data.Interfaces;
-using TelegramBot.Domain.Interfaces;
+using TelegramBot.Application.Shared;
+using TelegramBot.Domain.Exceptions.Starting;
 
 namespace TelegramBot.Application.Services;
 
@@ -18,7 +18,7 @@ public class BotService : IBotService
     private ITelegramBotClient? _bot;
     private bool _isRunning;
 
-    public BotService(IBotSettingsProvider botSettingsProvider,
+    public BotService(IGeneralBotSettingsProvider botSettingsProvider,
         IConfiguration config,
         IServiceProvider serviceProvider,
         IStoppingToken stoppingToken,
@@ -76,7 +76,7 @@ public class BotService : IBotService
 
     #region DI Fields
 
-    private readonly IBotSettingsProvider _botSettingsProvider;
+    private readonly IGeneralBotSettingsProvider _botSettingsProvider;
     private readonly IConfiguration _config;
     private readonly IServiceProvider _serviceProvider;
     private readonly IStoppingToken _stoppingToken;

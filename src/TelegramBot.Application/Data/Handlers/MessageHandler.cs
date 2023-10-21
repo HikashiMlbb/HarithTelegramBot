@@ -1,29 +1,24 @@
-﻿using Telegram.Bot;
+﻿using Serilog;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TelegramBot.Domain.Entities;
-using TelegramBot.Domain.ValueObjects;
-using TelegramBot.Application.Data.Interfaces;
-using TelegramBot.Domain.Repositories;
+using TelegramBot.Application.Services.Interfaces;
+using TelegramBot.Application.Shared;
 
 namespace TelegramBot.Application.Data.Handlers;
 
 // ReSharper disable once UnusedType.Global
 public class MessageHandler : IHandler
 {
-    private readonly IBotService _botService;
+    private readonly ILogger _logger = Log.ForContext<MessageHandler>();
+    
     private readonly CancellationToken _cancellationToken;
     private readonly ICommandExecuteService _commandExecuteService;
-    private readonly IRewardService _rewardService;
-    private readonly IUnitOfWork _uow;
+    private readonly IEnumerable<IMessageHandler> _messageHandlers;
 
-    public MessageHandler(IBotService botService, ICommandExecuteService commandExecuteService, IRewardService rewardService, IUnitOfWork uow,
-        IStoppingToken stoppingToken)
+    public MessageHandler(ICommandExecuteService commandExecuteService, IStoppingToken stoppingToken, IEnumerable<IMessageHandler> messageHandlers)
     {
-        _botService = botService;
         _commandExecuteService = commandExecuteService;
-        _rewardService = rewardService;
-        _uow = uow;
+        _messageHandlers = messageHandlers;
         _cancellationToken = stoppingToken.Token;
     }
 
@@ -37,45 +32,41 @@ public class MessageHandler : IHandler
         {
             var textCommand = message.Text!.GetFirstCommand();
 
-            if (await _commandExecuteService.FindCommandAsync(textCommand) is not { } command) return;
+            var command = await _commandExecuteService.FindCommandAsync(textCommand);
 
+            if (command is null)
+            {
+                _logger.Information(
+                    "{user} tried to call /{command} at chat {chatId}, but it doesn't exist",
+                    message.From!.ToString(), 
+                    textCommand,
+                    message.Chat.Id);
+                return;
+            }
+            
+            _logger.Information("{user} called /{command} at chat {chatId}", message.From!.ToString(), textCommand, message.Chat.Id);
+            
             await _commandExecuteService.ExecuteCommandAsync(command, message, _cancellationToken);
-
-            return;
         }
-
-        #region Rewarding
-
-        var telegramId = message.From!.Id;
-        var chatId = message.Chat.Id;
-        var account = new Account(telegramId, chatId);
-
-        var hasLevelUpped = await RewardMember(account, message);
-
-        var member = (await _uow.Members.FindUserByAccountAsync(account, _cancellationToken))!;
-
-        if (hasLevelUpped) await CongratulateMember(member, chatId);
-
-        #endregion
+        else
+        {
+            _logger.Information(
+                "{user} left a message {message} at chat {chatId}", 
+                message.From!.ToString(), 
+                message.Text,
+                message.Chat.Id);
+        }
         
-        await _uow.CompleteAsync(_cancellationToken);
+
+        await HandleOtherAsync(update);
     }
 
-    private async Task CongratulateMember(Member member, long chatId)
+    private async Task HandleOtherAsync(Update update)
     {
-        var messageToCongratulate = $"""
-                                     Поздравляем <a href="tg://user?id={member.Account.TelegramId}">{member.FirstName}</a> с
-                                     достижением {member.Level}-го уровня! 🎉🎉🎉
-                                     """;
-        await _botService.CurrentBot.SendTextMessageAsync(chatId, messageToCongratulate,
-            parseMode: ParseMode.Html,
-            disableNotification: true,
-            cancellationToken: _cancellationToken);
-    }
+        var tasks = _messageHandlers
+            .Select(messageHandler => messageHandler.Handle(update, _cancellationToken))
+            .ToList();
 
-    private async Task<bool> RewardMember(Account account, Message message)
-    {
-        var hasLevelUpped = await _rewardService.RewardAsync(account, message);
-        return hasLevelUpped;
+        await Task.WhenAll(tasks);
     }
 }

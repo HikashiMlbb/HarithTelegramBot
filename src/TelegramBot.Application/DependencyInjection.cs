@@ -5,9 +5,10 @@ using Serilog;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TelegramBot.Application.Data.Interfaces;
-using TelegramBot.Application.Data.Shared;
 using TelegramBot.Application.Services;
+using TelegramBot.Application.Services.Interfaces;
+using TelegramBot.Application.Shared;
+using TelegramBot.Partitions.Shared.Commands;
 
 namespace TelegramBot.Application;
 
@@ -23,16 +24,9 @@ public static class DependencyInjection
         services.AddSingleton<IUpdateHandler, UpdateHandler>();
         services.AddSingleton<IStoppingToken, CancellationService>();
         services.AddSingleton<ICommandExecuteService, CommandExecuteService>();
-        services.AddSingleton<IRewardService, RewardService>();
-        services.AddSingleton<IMemberService, MemberService>();
+
 
         return services;
-    }
-
-    public static bool IsCommand(this Message message)
-    {
-        return message.Entities is { } entities &&
-               entities.Any(entity => entity is { Type: MessageEntityType.BotCommand, Offset: 0 });
     }
 
     #region Privates

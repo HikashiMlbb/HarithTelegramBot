@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Serilog;
 using Telegram.Bot.Types;
-using TelegramBot.Application.Data.Interfaces;
-using TelegramBot.Application.Data.Shared;
+using TelegramBot.Application.Services.Interfaces;
+using TelegramBot.Partitions.Shared.Commands;
 using ILogger = Serilog.ILogger;
 
 namespace TelegramBot.Application.Services;

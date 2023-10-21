@@ -4,20 +4,17 @@ using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using TelegramBot.Application.Data.Constraints;
-using TelegramBot.Application.Data.Interfaces;
+using TelegramBot.Application.Services.Interfaces;
 
 namespace TelegramBot.Application.Services;
 
 public class UpdateHandler : IUpdateHandler
 {
-    private readonly ICommandExecuteService _commandExecuteService;
     private readonly IEnumerable<IHandler> _handlers;
     private readonly ILogger _logger = Log.ForContext<UpdateHandler>();
 
-    public UpdateHandler(ICommandExecuteService commandExecuteService, IServiceProvider serviceProvider)
+    public UpdateHandler(IServiceProvider serviceProvider)
     {
-        _commandExecuteService = commandExecuteService;
-
         _handlers = serviceProvider.GetServices<IHandler>();
     }
 
