@@ -1,5 +1,5 @@
 ﻿using Serilog;
-using TelegramBot.Application.Data.Interfaces;
+using TelegramBot.Application.Shared;
 
 namespace TelegramBot.Application.Services;
 
