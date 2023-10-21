@@ -9,13 +9,13 @@ namespace TelegramBot.Application.Data.Handlers;
 // ReSharper disable once UnusedType.Global
 public class MessageHandler : IHandler
 {
-    private readonly ILogger _logger = Log.ForContext<MessageHandler>();
-    
     private readonly CancellationToken _cancellationToken;
     private readonly ICommandExecuteService _commandExecuteService;
+    private readonly ILogger _logger = Log.ForContext<MessageHandler>();
     private readonly IEnumerable<IMessageHandler> _messageHandlers;
 
-    public MessageHandler(ICommandExecuteService commandExecuteService, IStoppingToken stoppingToken, IEnumerable<IMessageHandler> messageHandlers)
+    public MessageHandler(ICommandExecuteService commandExecuteService, IStoppingToken stoppingToken,
+        IEnumerable<IMessageHandler> messageHandlers)
     {
         _commandExecuteService = commandExecuteService;
         _messageHandlers = messageHandlers;
@@ -38,25 +38,26 @@ public class MessageHandler : IHandler
             {
                 _logger.Information(
                     "{user} tried to call /{command} at chat {chatId}, but it doesn't exist",
-                    message.From!.ToString(), 
+                    message.From!.ToString(),
                     textCommand,
                     message.Chat.Id);
                 return;
             }
-            
-            _logger.Information("{user} called /{command} at chat {chatId}", message.From!.ToString(), textCommand, message.Chat.Id);
-            
+
+            _logger.Information("{user} called /{command} at chat {chatId}", message.From!.ToString(), textCommand,
+                message.Chat.Id);
+
             await _commandExecuteService.ExecuteCommandAsync(command, message, _cancellationToken);
         }
         else
         {
             _logger.Information(
-                "{user} left a message {message} at chat {chatId}", 
-                message.From!.ToString(), 
+                "{user} left a message {message} at chat {chatId}",
+                message.From!.ToString(),
                 message.Text,
                 message.Chat.Id);
         }
-        
+
 
         await HandleOtherAsync(update);
     }

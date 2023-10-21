@@ -1,5 +1,4 @@
 ﻿using Main.Core.Domain.Exceptions.Database;
-using Main.Core.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +16,8 @@ public static class DependencyInjection
 
         if (connectionString == null) throw new ConnectionStringIsNotDefinedException(DefaultConnectionString);
 
-        services.AddDbContext<BasicPartitionContext>(options =>
-            {
-                options.UseNpgsql(connectionString, builder =>
-                {
-                    builder.EnableRetryOnFailure();
-                });
-            },
+        services.AddDbContext<BasicPartitionContext>(
+            options => { options.UseNpgsql(connectionString, builder => { builder.EnableRetryOnFailure(); }); },
             ServiceLifetime.Singleton);
     }
 }

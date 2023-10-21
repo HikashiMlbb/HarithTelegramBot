@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Core\Main.Core.Application\Main.Core.Application.csproj" />
-      <ProjectReference Include="..\Core\Main.Core.Domain\Main.Core.Domain.csproj" />
-      <ProjectReference Include="..\Core\Main.Core.Infrastructure\Main.Core.Infrastructure.csproj" />
-      <ProjectReference Include="..\Core\Main.Core.Persistence\Main.Core.Persistence.csproj" />
+        <ProjectReference Include="..\Core\Main.Core.Application\Main.Core.Application.csproj"/>
+        <ProjectReference Include="..\Core\Main.Core.Domain\Main.Core.Domain.csproj"/>
+        <ProjectReference Include="..\Core\Main.Core.Infrastructure\Main.Core.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Core\Main.Core.Persistence\Main.Core.Persistence.csproj"/>
     </ItemGroup>
 
 </Project>

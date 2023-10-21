@@ -7,8 +7,8 @@ namespace TelegramBot.Worker;
 public class Worker : BackgroundService
 {
     private readonly IBotService _botService;
-    private readonly IStoppingToken _stoppingToken;
     private readonly ILogger _logger;
+    private readonly IStoppingToken _stoppingToken;
 
     public Worker(IBotService botService, IStoppingToken stoppingToken)
     {

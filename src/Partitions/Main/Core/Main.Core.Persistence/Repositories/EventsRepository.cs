@@ -2,7 +2,6 @@
 using Main.Core.Domain.Exceptions.Events;
 using Main.Core.Domain.Repositories;
 using Main.Core.Infrastructure;
-using Main.Core.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Core.Persistence.Repositories;
@@ -18,13 +17,11 @@ public class EventsRepository : IEventsRepository
 
     public async Task<Event> AddAsync(string name, long chatId, float multiplier, CancellationToken cancellationToken)
     {
-        var existEvent = await _db.Set<Event>().AsNoTracking().FirstOrDefaultAsync(@event => @event.Name == name && @event.ChatId == chatId, cancellationToken);
+        var existEvent = await _db.Set<Event>().AsNoTracking()
+            .FirstOrDefaultAsync(@event => @event.Name == name && @event.ChatId == chatId, cancellationToken);
 
-        if (existEvent is not null)
-        {
-            throw new EventAlreadyExistException(name, chatId);
-        }
-        
+        if (existEvent is not null) throw new EventAlreadyExistException(name, chatId);
+
         var @event = new Event(name, chatId, multiplier);
         return (await _db.Set<Event>().AddAsync(@event, cancellationToken)).Entity;
     }
@@ -46,6 +43,7 @@ public class EventsRepository : IEventsRepository
 
     public async Task<IEnumerable<Event>> AllAsync(long chatId, CancellationToken cancellationToken)
     {
-        return await Task.Run(() => _db.Set<Event>().AsNoTracking().Where(@event => @event.ChatId == chatId), cancellationToken);
+        return await Task.Run(() => _db.Set<Event>().AsNoTracking().Where(@event => @event.ChatId == chatId),
+            cancellationToken);
     }
 }

@@ -3,8 +3,6 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Telegram.Bot.Polling;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Services;
 using TelegramBot.Application.Services.Interfaces;
 using TelegramBot.Application.Shared;
@@ -48,7 +46,7 @@ public static class DependencyInjection
         var commands = new Stack<ITextCommand>();
 
         var results = new Dictionary<ITextCommand, Type?>();
-        
+
         IncludeTextCommands(services, assemblies, typeofTextCommandInterface, commands);
         IncludeTextCommandHandlers(services, commands, assemblies, results);
 
@@ -59,24 +57,16 @@ public static class DependencyInjection
 
         sb.AppendLine($"It was successfully added {notNullCommands.Length} / {commands.Count} bot commands:");
         foreach (var notNullCommand in notNullCommands)
-        {
             sb.AppendLine($"{notNullCommand.Key.GetType().FullName}: {notNullCommand.Value!.FullName}");
-        }
 
         Log.Information(sb.ToString());
         sb.Clear();
-        
-        if (!areThereFailures)
-        {
-            return;
-        }
+
+        if (!areThereFailures) return;
 
         sb.AppendLine($"There are has NOT been added {nullCommands.Length} bot commands:");
-        foreach (var nullCommand in nullCommands)
-        {
-            sb.AppendLine($"{nullCommand.Key.GetType().FullName}");
-        }
-        
+        foreach (var nullCommand in nullCommands) sb.AppendLine($"{nullCommand.Key.GetType().FullName}");
+
         Log.Warning(sb.ToString(), nullCommands.Select(x => x.Key).ToArray());
     }
 
@@ -84,31 +74,21 @@ public static class DependencyInjection
         Type typeofTextCommandInterface, Stack<ITextCommand> commands)
     {
         foreach (var assembly in assemblies)
+        foreach (var type in assembly.GetTypes())
         {
-            foreach (var type in assembly.GetTypes())
-            {
-                if (!type.IsAssignableTo(typeofTextCommandInterface))
-                {
-                    continue;
-                }
+            if (!type.IsAssignableTo(typeofTextCommandInterface)) continue;
 
-                if (!type.IsClass || type.IsAbstract)
-                {
-                    continue;
-                }
+            if (!type.IsClass || type.IsAbstract) continue;
 
-                if (type.GetCustomAttribute<CommandAttribute>() is null)
-                {
-                    continue;
-                }
+            if (type.GetCustomAttribute<CommandAttribute>() is null) continue;
 
-                commands.Push(Activator.CreateInstance(type) as ITextCommand ?? throw new InvalidOperationException());
-                services.AddSingleton(typeofTextCommandInterface, type);
-            }
+            commands.Push(Activator.CreateInstance(type) as ITextCommand ?? throw new InvalidOperationException());
+            services.AddSingleton(typeofTextCommandInterface, type);
         }
     }
 
-    private static void IncludeTextCommandHandlers(IServiceCollection services, Stack<ITextCommand> commands, Assembly[] assemblies, Dictionary<ITextCommand, Type?> results) 
+    private static void IncludeTextCommandHandlers(IServiceCollection services, Stack<ITextCommand> commands,
+        Assembly[] assemblies, Dictionary<ITextCommand, Type?> results)
     {
         foreach (var command in commands)
         {
@@ -116,30 +96,20 @@ public static class DependencyInjection
             var typeofInterface = typeof(ITextCommandHandler<>);
 
             var targetType = typeofInterface.MakeGenericType(typeofCommand);
-            
+
             results.Add(command, null);
 
             foreach (var assembly in assemblies)
+            foreach (var type in assembly.GetTypes())
             {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (!type.IsAssignableTo(targetType))
-                    {
-                        continue;
-                    }
+                if (!type.IsAssignableTo(targetType)) continue;
 
-                    if (!type.IsClass || type.IsAbstract)
-                    {
-                        continue;
-                    }
+                if (!type.IsClass || type.IsAbstract) continue;
 
-                    services.AddSingleton(targetType, type);
-                    results[command] = type;
-                }
+                services.AddSingleton(targetType, type);
+                results[command] = type;
             }
         }
-        
-        
     }
 
     #endregion

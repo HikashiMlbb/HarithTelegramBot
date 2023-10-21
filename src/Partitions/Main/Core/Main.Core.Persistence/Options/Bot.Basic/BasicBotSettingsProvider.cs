@@ -12,9 +12,18 @@ public class BasicBotSettingsProvider : IBasicBotSettingsProvider
         _optionsMonitor = optionsMonitor;
     }
 
-    public TimeSpan? GetRewardInterval() => _optionsMonitor.CurrentValue.RewardInterval;
+    public TimeSpan? GetRewardInterval()
+    {
+        return _optionsMonitor.CurrentValue.RewardInterval;
+    }
 
-    public TimeSpan? GetMessageInterval() => _optionsMonitor.CurrentValue.MessageInterval;
+    public TimeSpan? GetMessageInterval()
+    {
+        return _optionsMonitor.CurrentValue.MessageInterval;
+    }
 
-    public Dictionary<string, float>? GetRewardSystem() => _optionsMonitor.CurrentValue.RewardSystem;
+    public Dictionary<string, float>? GetRewardSystem()
+    {
+        return _optionsMonitor.CurrentValue.RewardSystem;
+    }
 }

@@ -1,7 +1,6 @@
-﻿using Main.Core.Application.Data.Interfaces;
-using Main.Core.Application.Data.Builders;
+﻿using Main.Core.Application.Data.Builders;
+using Main.Core.Application.Data.Interfaces;
 using Main.Core.Application.Services.Interfaces;
-using Main.Core.Domain.Entities;
 using Main.Core.Domain.Repositories;
 using Main.Core.Domain.ValueObjects;
 using Telegram.Bot.Types;
@@ -16,7 +15,8 @@ public class RewardService : IRewardService
     private readonly IStoppingToken _stoppingToken;
     private readonly IUnitOfWork _uow;
 
-    public RewardService(IBasicBotSettingsProvider basicBotSettingsProvider, IUnitOfWork uow, IStoppingToken stoppingToken,
+    public RewardService(IBasicBotSettingsProvider basicBotSettingsProvider, IUnitOfWork uow,
+        IStoppingToken stoppingToken,
         IMemberService memberService)
     {
         _basicBotSettingsProvider = basicBotSettingsProvider;
@@ -33,13 +33,13 @@ public class RewardService : IRewardService
 
         IRewardingBuilder rewardingBuilder =
             new RewardingBuilder(member, _basicBotSettingsProvider, _memberService.GetRequiredExperience);
-        IEnumerable<Event> events = await _uow.Events.AllAsync(account.ChatId, _stoppingToken.Token);
-        
+        var events = await _uow.Events.AllAsync(account.ChatId, _stoppingToken.Token);
+
         var hasLevelUpped = rewardingBuilder
-                .TryReward(message, events)
-                .LevelUp()
-                .UpdateLastRewardDate()
-                .Build();
+            .TryReward(message, events)
+            .LevelUp()
+            .UpdateLastRewardDate()
+            .Build();
 
         return hasLevelUpped;
     }

@@ -8,7 +8,7 @@ namespace Main.Core;
 
 public static class DependencyInjection
 {
-    public static void AddBasicPartition(this IServiceCollection services, IConfiguration configuration)
+    public static void AddMainPartition(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddApplication();
         services.AddInfrastructure(configuration, "PostgreSQL");

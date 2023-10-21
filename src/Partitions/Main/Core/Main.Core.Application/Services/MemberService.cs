@@ -21,18 +21,18 @@ public class MemberService : IMemberService
 
     public string GetStat(Member member)
     {
-        float currentExp = member.Experience;
-        float requiredExp = GetRequiredExperience(member);
-        int filledSquaresCount = (int)(currentExp * 10 / requiredExp);
+        var currentExp = member.Experience;
+        var requiredExp = GetRequiredExperience(member);
+        var filledSquaresCount = (int)(currentExp * 10 / requiredExp);
 
-        char[] progressBar = new string('\u25a1', 10).ToCharArray();
+        var progressBar = new string('\u25a1', 10).ToCharArray();
         ReplaceFirst(progressBar, filledSquaresCount);
-        
-        string stat = $"""
-                       Уровень: {member.Level}
-                       Опыт: {currentExp:F}/{requiredExp}
-                       [{string.Join(' ', progressBar)}]
-                       """;
+
+        var stat = $"""
+                    Уровень: {member.Level}
+                    Опыт: {currentExp:F}/{requiredExp}
+                    [{string.Join(' ', progressBar)}]
+                    """;
         return stat;
     }
 

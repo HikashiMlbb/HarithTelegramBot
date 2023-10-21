@@ -12,7 +12,7 @@ public sealed class Member : Entity
         Level = 0;
         Experience = 0f;
     }
-    
+
     public string FirstName { get; set; }
     public Account Account { get; set; }
     public int Level { get; set; }

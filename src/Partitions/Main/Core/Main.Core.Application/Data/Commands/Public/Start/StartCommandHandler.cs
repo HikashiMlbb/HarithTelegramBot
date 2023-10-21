@@ -37,19 +37,21 @@ public class StartCommandHandler : ITextCommandHandler<StartCommand>
         {
             await _uow.Members.AddAsync(member, cancellationToken);
             await _uow.CompleteAsync(cancellationToken);
-            
+
             var foundMember = (await _uow.Members.FindUserByAccountAsync(account, cancellationToken))!;
 
-            string stat = "Вы успешно зарегистрировались!\n" + _memberService.GetStat(foundMember);
+            var stat = "Вы успешно зарегистрировались!\n" + _memberService.GetStat(foundMember);
 
-            await _bot.SendTextMessageAsync(chatId, stat, replyToMessageId: message.MessageId, cancellationToken: cancellationToken);
+            await _bot.SendTextMessageAsync(chatId, stat, replyToMessageId: message.MessageId,
+                cancellationToken: cancellationToken);
         }
         catch (MemberAlreadyExistsException)
         {
             var foundMember = (await _uow.Members.FindUserByAccountAsync(account, cancellationToken))!;
-            string stat = _memberService.GetStat(foundMember);
-            
-            await _bot.SendTextMessageAsync(chatId, stat, replyToMessageId: message.MessageId, cancellationToken: cancellationToken);
+            var stat = _memberService.GetStat(foundMember);
+
+            await _bot.SendTextMessageAsync(chatId, stat, replyToMessageId: message.MessageId,
+                cancellationToken: cancellationToken);
         }
     }
 }

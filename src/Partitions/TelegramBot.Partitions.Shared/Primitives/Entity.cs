@@ -4,8 +4,8 @@ public abstract class Entity : IEquatable<Entity>
 {
     protected Entity()
     {
-        
     }
+
     protected Entity(Guid id)
     {
         Id = id;

@@ -12,6 +12,13 @@ public class GeneralBotSettingsProvider : IGeneralBotSettingsProvider
         _botSettingsMonitor = botSettingsMonitor;
     }
 
-    public string? GetToken() => _botSettingsMonitor.CurrentValue.Token;
-    public string? GetProxy() => _botSettingsMonitor.CurrentValue.Proxy;
+    public string? GetToken()
+    {
+        return _botSettingsMonitor.CurrentValue.Token;
+    }
+
+    public string? GetProxy()
+    {
+        return _botSettingsMonitor.CurrentValue.Proxy;
+    }
 }

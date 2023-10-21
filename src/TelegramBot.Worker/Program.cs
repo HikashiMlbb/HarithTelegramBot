@@ -1,6 +1,5 @@
 using Main.Core;
 using Serilog;
-using Serilog.Events;
 using TelegramBot.Application;
 using TelegramBot.Persistence;
 using TelegramBot.Worker;
@@ -14,11 +13,11 @@ var host = Host.CreateDefaultBuilder(args)
 
         Log.Logger = logger;
 
-        services.AddBasicPartition(hostCtx.Configuration);
-        
+        services.AddMainPartition(hostCtx.Configuration);
+
         services.AddApplication();
         services.AddPersistence();
-        
+
         services.AddHostedService<Worker>();
     })
     .Build();
