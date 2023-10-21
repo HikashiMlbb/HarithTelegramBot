@@ -14,7 +14,7 @@ var host = Host.CreateDefaultBuilder(args)
         Log.Logger = logger;
 
         services.AddMainPartition(hostCtx.Configuration);
-
+        
         services.AddApplication();
         services.AddPersistence();
 
