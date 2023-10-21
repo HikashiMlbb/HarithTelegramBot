@@ -13,8 +13,8 @@ var host = Host.CreateDefaultBuilder(args)
             .CreateLogger();
 
         Log.Logger = logger;
-
-        services.AddBasicPartition(hostCtx.Configuration);
+        
+        services.AddMainPartition(hostCtx.Configuration);
         
         services.AddApplication();
         services.AddPersistence();
