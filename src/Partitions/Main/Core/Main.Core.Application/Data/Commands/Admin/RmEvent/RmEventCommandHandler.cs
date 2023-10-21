@@ -1,11 +1,11 @@
 ﻿using Main.Core.Domain.Exceptions.Events;
 using Main.Core.Domain.Repositories;
-using TelegramBot.Partitions.Shared.Commands;
 using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Shared;
+using TelegramBot.Partitions.Shared.Commands;
 
 namespace Main.Core.Application.Data.Commands.Admin.RmEvent;
 
@@ -13,8 +13,8 @@ namespace Main.Core.Application.Data.Commands.Admin.RmEvent;
 public class RmEventCommandHandler : ITextCommandHandler<RmEventCommand>
 {
     private readonly ITelegramBotClient _bot;
-    private readonly IUnitOfWork _uow;
     private readonly ILogger _logger = Log.ForContext<RmEventCommandHandler>();
+    private readonly IUnitOfWork _uow;
 
     public RmEventCommandHandler(IBotService bot, IUnitOfWork uow)
     {
@@ -28,17 +28,14 @@ public class RmEventCommandHandler : ITextCommandHandler<RmEventCommand>
         var chatId = message.Chat.Id;
         var chatMember = await _bot.GetChatMemberAsync(chatId, userId, cancellationToken);
 
-        if (chatMember.Status != ChatMemberStatus.Creator)
-        {
-            return;
-        }
-        
+        if (chatMember.Status != ChatMemberStatus.Creator) return;
+
         var arg = message.Text!.Split(
-            ' ',
-            2,
-            StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                ' ',
+                2,
+                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Last();
-        
+
         arg = string.Concat(arg.Where(ch => ch != '\"'));
 
         try
@@ -46,10 +43,9 @@ public class RmEventCommandHandler : ITextCommandHandler<RmEventCommand>
             var removedEvent = await _uow.Events.RemoveAsync(arg, chatId, cancellationToken);
 
             await _uow.CompleteAsync(cancellationToken);
-            
+
             await _bot.SendTextMessageAsync(chatId, $"Событие \"{removedEvent.Name}\" было успешно удалено!",
                 replyToMessageId: message.MessageId, cancellationToken: cancellationToken);
-
         }
         catch (EventNotFoundException)
         {

@@ -3,17 +3,15 @@ using Serilog;
 using Telegram.Bot.Types;
 using TelegramBot.Application.Services.Interfaces;
 using TelegramBot.Partitions.Shared.Commands;
-using ILogger = Serilog.ILogger;
 
 namespace TelegramBot.Application.Services;
 
 public class CommandExecuteService : ICommandExecuteService
 {
-    private readonly ILogger _logger = Log.ForContext<CommandExecuteService>();
-    
     private readonly IEnumerable<ITextCommand> _commands;
+    private readonly ILogger _logger = Log.ForContext<CommandExecuteService>();
     private readonly IServiceProvider _serviceProvider;
-    
+
 
     public CommandExecuteService(IEnumerable<ITextCommand> commands, IServiceProvider serviceProvider)
     {
@@ -26,7 +24,8 @@ public class CommandExecuteService : ICommandExecuteService
         return await Task.Run(() => FindCommand(commandName));
     }
 
-    public async Task ExecuteCommandAsync(ITextCommand commandHandler, Message message, CancellationToken cancellationToken)
+    public async Task ExecuteCommandAsync(ITextCommand commandHandler, Message message,
+        CancellationToken cancellationToken)
     {
         await Task.Run(() => ExecuteCommand(commandHandler, message, cancellationToken), cancellationToken);
     }
@@ -60,12 +59,11 @@ public class CommandExecuteService : ICommandExecuteService
     private ITextCommand? FindCommand(string commandName)
     {
         return (
-            from command in _commands 
+            from command in _commands
             let result = command.GetType().GetCustomAttribute<CommandAttribute>()
-            where result?.Name == commandName 
+            where result?.Name == commandName
             select command).FirstOrDefault();
     }
 
     #endregion
-    
 }

@@ -12,7 +12,7 @@ public static class DependencyInjection
             .BindConfiguration(GeneralBotSettings.PathToSection)
             .ValidateDataAnnotations()
             .ValidateOnStart();
-        
+
         services.AddSingleton<IGeneralBotSettingsProvider, GeneralBotSettingsProvider>();
     }
 }

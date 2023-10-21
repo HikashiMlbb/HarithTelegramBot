@@ -2,20 +2,20 @@
 using System.Text.RegularExpressions;
 using Main.Core.Domain.Exceptions.Events;
 using Main.Core.Domain.Repositories;
-using TelegramBot.Partitions.Shared.Commands;
 using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.Application.Shared;
+using TelegramBot.Partitions.Shared.Commands;
 
 namespace Main.Core.Application.Data.Commands.Admin.MkEvent;
 
 [Command("mkevnt")]
 public class MkEventCommandHandler : ITextCommandHandler<MkEventCommand>
 {
-    private readonly ILogger _logger = Log.ForContext<MkEventCommandHandler>();
     private readonly ITelegramBotClient _bot;
+    private readonly ILogger _logger = Log.ForContext<MkEventCommandHandler>();
     private readonly IUnitOfWork _uow;
 
     public MkEventCommandHandler(IBotService bot, IUnitOfWork uow)
@@ -28,12 +28,9 @@ public class MkEventCommandHandler : ITextCommandHandler<MkEventCommand>
     {
         var userId = message.From!.Id;
         var chatId = message.Chat.Id;
-        var chatMember = await _bot.GetChatMemberAsync(chatId, userId, cancellationToken: cancellationToken);
+        var chatMember = await _bot.GetChatMemberAsync(chatId, userId, cancellationToken);
 
-        if (chatMember.Status != ChatMemberStatus.Creator)
-        {
-            return;
-        }
+        if (chatMember.Status != ChatMemberStatus.Creator) return;
 
         var args = message.Text!.Split(
                 ' ',
@@ -50,7 +47,7 @@ public class MkEventCommandHandler : ITextCommandHandler<MkEventCommand>
         {
             await _bot.SendTextMessageAsync(
                 chatId,
-                "Вы ввели данные события в неверном формате.\nВерный формат:\n/mkevnt \"New year\" 0.15", 
+                "Вы ввели данные события в неверном формате.\nВерный формат:\n/mkevnt \"New year\" 0.15",
                 cancellationToken: cancellationToken);
             return;
         }
@@ -72,7 +69,7 @@ public class MkEventCommandHandler : ITextCommandHandler<MkEventCommand>
         catch (EventAlreadyExistException)
         {
             await _bot.SendTextMessageAsync(
-                chatId, 
+                chatId,
                 "Это событие уже существует :)",
                 replyToMessageId: message.MessageId,
                 cancellationToken: cancellationToken);

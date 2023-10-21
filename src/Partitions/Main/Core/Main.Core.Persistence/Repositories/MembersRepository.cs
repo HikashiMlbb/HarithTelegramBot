@@ -4,7 +4,6 @@ using Main.Core.Domain.Exceptions.Members;
 using Main.Core.Domain.Repositories;
 using Main.Core.Domain.ValueObjects;
 using Main.Core.Infrastructure;
-using Main.Core.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Main.Core.Persistence.Repositories;
@@ -34,14 +33,16 @@ public class MembersRepository : IMembersRepository
     public async Task<IEnumerable<Member>> FindUsersByChatIdAsync(long id,
         CancellationToken cancellationToken = default)
     {
-        return await Task.Run(() => _db.Set<Member>().AsNoTracking().Where(member => member.Account.ChatId == id), cancellationToken);
+        return await Task.Run(() => _db.Set<Member>().AsNoTracking().Where(member => member.Account.ChatId == id),
+            cancellationToken);
     }
 
     public async Task<IEnumerable<Member>> FilterByAsync(Predicate<Member> predicate,
         CancellationToken cancellationToken = default)
     {
         return await Task.Run(
-            () => _db.Set<Member>().AsNoTracking().Where(Expression.Lambda<Func<Member, bool>>(Expression.Call(predicate.Method))),
+            () => _db.Set<Member>().AsNoTracking()
+                .Where(Expression.Lambda<Func<Member, bool>>(Expression.Call(predicate.Method))),
             cancellationToken);
     }
 
@@ -62,6 +63,7 @@ public class MembersRepository : IMembersRepository
     private async Task<bool> IsMemberExistInDatabaseAsync(Member targetMember,
         CancellationToken cancellationToken = default)
     {
-        return await _db.Set<Member>().AnyAsync(dbMember => dbMember.Account == targetMember.Account, cancellationToken);
+        return await _db.Set<Member>()
+            .AnyAsync(dbMember => dbMember.Account == targetMember.Account, cancellationToken);
     }
 }

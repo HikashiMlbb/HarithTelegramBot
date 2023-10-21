@@ -11,12 +11,13 @@ namespace Main.Core.Application.Data.Handlers;
 
 public class MessageHandler : IMessageHandler
 {
-    private readonly IUnitOfWork _uow;
+    private readonly ITelegramBotClient _botService;
     private readonly CancellationToken _cancellationToken;
     private readonly IRewardService _rewardService;
-    private readonly ITelegramBotClient _botService;
+    private readonly IUnitOfWork _uow;
 
-    public MessageHandler(IUnitOfWork uow, IStoppingToken stoppingToken, IRewardService rewardService, IBotService botService)
+    public MessageHandler(IUnitOfWork uow, IStoppingToken stoppingToken, IRewardService rewardService,
+        IBotService botService)
     {
         _uow = uow;
         _rewardService = rewardService;
@@ -27,13 +28,11 @@ public class MessageHandler : IMessageHandler
     public async Task Handle(Update update, CancellationToken cancellationToken = default)
     {
         var message = update.Message!;
-        
-        if (message.IsCommand())
-        {
-            return;
-        }
+
+        if (message.IsCommand()) return;
 
         #region TrynaToReward
+
         var telegramId = message.From!.Id;
         var chatId = message.Chat.Id;
         var account = new Account(telegramId, chatId);
@@ -43,11 +42,12 @@ public class MessageHandler : IMessageHandler
         var member = (await _uow.Members.FindUserByAccountAsync(account, _cancellationToken))!;
 
         if (hasLevelUpped) await CongratulateMember(member, chatId);
+
         #endregion
-        
+
         await _uow.CompleteAsync(_cancellationToken);
     }
-    
+
     private async Task<bool> RewardMember(Account account, Message message)
     {
         var hasLevelUpped = await _rewardService.RewardAsync(account, message);

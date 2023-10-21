@@ -61,10 +61,7 @@ internal class RewardingBuilder : IRewardingBuilder
     {
         var interval = DateTime.UtcNow - _member.LastRewardAt;
 
-        if (_isRewarded == false || interval <= _settings.GetRewardInterval())
-        {
-            return this;
-        }
+        if (_isRewarded == false || interval <= _settings.GetRewardInterval()) return this;
 
         _shouldUpdateDate = true;
         _member.Experience += _member.ExperienceToReward;
@@ -77,10 +74,7 @@ internal class RewardingBuilder : IRewardingBuilder
 
     public IRewardingBuilder UpdateLastRewardDate()
     {
-        if (_isRewarded)
-        {
-            _member.LastMessageAt = DateTime.UtcNow;
-        }
+        if (_isRewarded) _member.LastMessageAt = DateTime.UtcNow;
         if (!_isRewarded || !_shouldUpdateDate) return this;
 
         _member.LastRewardAt = DateTime.UtcNow;
@@ -136,5 +130,6 @@ internal class RewardingBuilder : IRewardingBuilder
         var totalMultiplier = events.Select(@event => @event.Multiplier).Aggregate(1f, (acc, x) => acc * x);
         return experienceToAdd * totalMultiplier;
     }
+
     #endregion
 }

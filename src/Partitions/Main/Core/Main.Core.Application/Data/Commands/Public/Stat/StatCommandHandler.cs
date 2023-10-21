@@ -1,5 +1,4 @@
 ﻿using Main.Core.Application.Services.Interfaces;
-using Main.Core.Domain.Entities;
 using Main.Core.Domain.Repositories;
 using Main.Core.Domain.ValueObjects;
 using Telegram.Bot;
@@ -12,16 +11,17 @@ namespace Main.Core.Application.Data.Commands.Public.Stat;
 [Command("stat")]
 public class StatCommandHandler : ITextCommandHandler<StatCommand>
 {
-    private readonly IUnitOfWork _uow;
-    private readonly IMemberService _memberService;
     private readonly ITelegramBotClient _bot;
-    
+    private readonly IMemberService _memberService;
+    private readonly IUnitOfWork _uow;
+
     public StatCommandHandler(IUnitOfWork uow, IMemberService memberService, IBotService botService)
     {
         _uow = uow;
         _memberService = memberService;
         _bot = botService.CurrentBot;
     }
+
     public async Task ExecuteAsync(Message message, CancellationToken cancellationToken)
     {
         var telegramId = message.From!.Id;
@@ -29,15 +29,12 @@ public class StatCommandHandler : ITextCommandHandler<StatCommand>
 
         var account = new Account(telegramId, chatId);
 
-        Member? member = await _uow.Members.FindUserByAccountAsync(account, cancellationToken);
+        var member = await _uow.Members.FindUserByAccountAsync(account, cancellationToken);
 
-        if (member is null)
-        {
-            return;
-        }
+        if (member is null) return;
 
-        string messageToSend = _memberService.GetStat(member);
-        
+        var messageToSend = _memberService.GetStat(member);
+
         await _bot.SendTextMessageAsync(chatId, messageToSend,
             replyToMessageId: message.MessageId, cancellationToken: cancellationToken);
     }

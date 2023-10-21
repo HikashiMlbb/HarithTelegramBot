@@ -33,9 +33,7 @@ public class UpdateHandler : IUpdateHandler
     public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
         CancellationToken cancellationToken)
     {
-        await Task.Factory.StartNew(() =>
-        {
-            _logger.Error("Polling exception: {error}", exception);
-        }, cancellationToken);
+        await Task.Factory.StartNew(() => { _logger.Error("Polling exception: {error}", exception); },
+            cancellationToken);
     }
 }

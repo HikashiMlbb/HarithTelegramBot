@@ -1,6 +1,5 @@
 ﻿using Main.Core.Domain.Repositories;
 using Main.Core.Infrastructure;
-using Main.Core.Infrastructure.Data;
 
 namespace Main.Core.Persistence.Repositories;
 
